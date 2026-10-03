@@ -1,0 +1,8 @@
+# Lanzadores con el terminador de línea requerido por cada sistema.
+*.bat text eol=crlf
+*.sh text eol=lf
+
+# Las huellas documentadas requieren conservar exactamente estos bytes.
+data/reviews.json -text
+data/articulos_es.csv -text
+data/source.json -text

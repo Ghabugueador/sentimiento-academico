@@ -10121,6 +10121,41 @@ weighted avg     0.4078    0.4667    0.4283        75
 <h3 id="C%C3%B3mo-explicar-la-pr%C3%A1ctica">Cómo explicar la práctica<a class="anchor-link" href="#C%C3%B3mo-explicar-la-pr%C3%A1ctica">¶</a></h3><p>Las etiquetas se conocen antes de entrenar: proceden de <code>orientation</code>. El modelo aprende una relación entre los términos del comentario y esas etiquetas. Los identificadores sirven para agrupar y revisar; no revelan el sentimiento al algoritmo.</p>
 <p>Hay tres usos distintos de los datos: <strong>entrenamiento</strong> para aprender; <strong>validación cruzada dentro del entrenamiento</strong> para elegir opciones; y <strong>prueba reservada</strong> para medir el resultado de esa elección. Cada Pipeline aprende su TF-IDF dentro del pliegue correspondiente. Así la prueba y la validación no deciden el vocabulario con el que se entrenan los modelos.</p>
 <p>Para exponer las métricas, use un ejemplo real de las salidas: SVM acierta 35 de 75 comentarios, por lo que Accuracy es 46,67 %. Su F1 macro de prueba es 0,3877. La matriz y el informe por clase muestran que neutral se reconoce peor. Estos resultados explican tanto el funcionamiento como los límites de la práctica; la demostración no garantiza que un comentario nuevo se clasifique correctamente.</p>
+<h3 id="Abrir-la-pr%C3%A1ctica-en-Windows-o-Linux">Abrir la práctica en Windows o Linux<a class="anchor-link" href="#Abrir-la-pr%C3%A1ctica-en-Windows-o-Linux">¶</a></h3><p>El mismo notebook y los mismos scripts se utilizan en <strong>Windows y Linux</strong>. Cada compañero debe crear su propio entorno con <strong>Python 3.12</strong>; no copie la carpeta <code>.venv</code> de otro equipo o sistema operativo. Abra una terminal en la carpeta <code>sentimiento-academico</code>, donde se encuentran este README y <code>requirements-lock.txt</code>.</p>
+<p><strong>Preparación en Windows (PowerShell).</strong> Con Python 3.12 instalado y disponible mediante el lanzador <code>py</code>, ejecute:</p>
+<div class="highlight"><pre><span></span><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="n">requirements-lock</span><span class="p">.</span><span class="n">txt</span>
+<span class="p">.\</span><span class="n">abrir_notebook</span><span class="p">.</span><span class="n">bat</span>
+</pre></div>
+<p>Después de preparar el entorno una vez, puede abrir <code>abrir_notebook.bat</code> con doble clic. Si <code>py -3.12</code> no encuentra Python, utilice la ruta al ejecutable de Python 3.12; por ejemplo, <code>&amp; "C:\ruta\a\python.exe" -m venv .venv</code> en PowerShell.</p>
+<p><strong>Preparación en Linux (terminal).</strong> Compruebe que está instalado Python 3.12 con soporte para crear entornos virtuales y ejecute:</p>
+<div class="highlight"><pre><span></span>python3.12<span class="w"> </span>--version
+python3.12<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+.venv/bin/python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-lock.txt
+sh<span class="w"> </span>abrir_notebook.sh
+</pre></div>
+<p>Si su comando <code>python3</code> corresponde a Python 3.12, puede utilizar <code>python3 -m venv .venv</code>. Si falta Python 3.12 o su módulo <code>venv</code>, instálelos con el gestor de paquetes de su distribución antes de continuar. En Ubuntu o Debian, el nombre y la disponibilidad del paquete dependen de la versión del sistema y de cómo se instaló Python; compruebe que el soporte <code>venv</code> corresponda al Python 3.12 utilizado.</p>
+<p>Después de preparar el entorno una vez, utilice <code>sh abrir_notebook.sh</code> para abrir la práctica. No necesita activar <code>.venv</code> ni cambiar los permisos del archivo: el lanzador utiliza directamente el Python del entorno del proyecto. Los lanzadores comprueban que el entorno exista; la instalación de dependencias se realiza con los comandos anteriores.</p>
+<p><code>requirements-lock.txt</code> fija las versiones e incluye marcadores del sistema operativo: instala <code>pywinpty</code> en Windows y <code>pexpect</code> y <code>ptyprocess</code> en Linux. Las dependencias compartidas, como <code>tzdata</code>, se instalan en ambos sistemas. <code>.gitattributes</code> mantiene los bytes de <code>data/reviews.json</code>, <code>data/articulos_es.csv</code> y <code>data/source.json</code> al compartirlos mediante Git, para conservar los datos y sus verificaciones de integridad; también mantiene finales de línea LF en el lanzador de Linux. No cambie los archivos originales ni las huellas SHA-256 para corregir un error de verificación.</p>
+<p>Si prefiere abrir JupyterLab sin el lanzador, utilice el comando de su sistema desde la carpeta del proyecto:</p>
+<table>
+<thead>
+<tr>
+<th>Sistema</th>
+<th>Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows / PowerShell</td>
+<td><code>.\.venv\Scripts\python.exe -m jupyterlab notebooks/sentiment_analysis.ipynb</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td><code>.venv/bin/python -m jupyterlab notebooks/sentiment_analysis.ipynb</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>

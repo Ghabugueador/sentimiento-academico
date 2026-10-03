@@ -1,4 +1,5 @@
-# Entorno verificado: Python 3.12, Windows
+# Versiones del entorno Python 3.12; dependencias por sistema con marcadores.
+# Windows: pywinpty/colorama. Linux: pexpect/ptyprocess.
 Jinja2==3.1.6
 MarkupSafe==3.0.3
 PyYAML==6.0.3
@@ -18,7 +19,7 @@ certifi==2026.7.22
 cffi==2.1.1
 charset-normalizer==3.5.2
 cloudpickle==3.1.2
-colorama==0.4.6
+colorama==0.4.6; sys_platform == "win32"
 comm==0.2.3
 contourpy==1.4.0
 cycler==0.12.1
@@ -68,17 +69,19 @@ packaging==26.3
 pandas==3.0.6
 pandocfilters==1.5.1
 parso==0.8.7
+pexpect==4.9.0; sys_platform == "linux"
 pillow==12.3.0
 platformdirs==4.12.2
 prometheus_client==0.26.0
 prompt_toolkit==3.0.53
 psutil==7.2.2
+ptyprocess==0.7.0; sys_platform == "linux"
 pure_eval==0.2.4
 pycparser==3.0
 pyparsing==3.3.3
 python-dateutil==2.9.0.post0
 python-json-logger==4.2.0
-pywinpty==3.0.5
+pywinpty==3.0.5; sys_platform == "win32"
 pyzmq==27.2.0
 referencing==0.37.0
 requests==2.34.2
