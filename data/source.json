@@ -1,0 +1,86 @@
+{
+  "dataset": "Paper Reviews",
+  "autor": "Brian Keith",
+  "anio_publicacion": 2017,
+  "repositorio": "UCI Machine Learning Repository",
+  "fuente_url": "https://archive.ics.uci.edu/dataset/410/paper+reviews",
+  "descarga_url": "https://archive.ics.uci.edu/static/public/410/paper%2Breviews.zip",
+  "doi": "10.24432/C50G60",
+  "doi_url": "https://doi.org/10.24432/C50G60",
+  "licencia": "CC BY 4.0",
+  "licencia_url": "https://creativecommons.org/licenses/by/4.0/",
+  "archivo_original": "reviews.json",
+  "archivo_derivado": "articulos_es.csv",
+  "sha256_json_original": "5ea7a36d2655b89db2b73c999f086a3df607089ebd11ebeeb122105d7f0de888",
+  "sha256_zip_oficial": "ee542f0f808921bf599f5678467574a770bb7d3dabac8b10d3dd12d9cf859ec2",
+  "sha256_csv_derivado": "12cae78bbc1b73c852c70bde718dabc4ec9bc09969c97e50203ab0707698b81b",
+  "version_transformacion": 1,
+  "codificacion_csv": "UTF-8 sin BOM; terminador de línea LF",
+  "columnas_csv": [
+    "articulo_id",
+    "evaluacion_id",
+    "texto",
+    "orientacion",
+    "idioma",
+    "fecha",
+    "anio"
+  ],
+  "transformacion": [
+    "Recorrer paper y review en su orden original.",
+    "Seleccionar solamente evaluaciones con lan igual a es.",
+    "Conservar text íntegro, incluido el texto vacío, sin traducir ni sintetizar.",
+    "Renombrar id de paper como articulo_id e id de review como evaluacion_id.",
+    "Renombrar text, orientation y lan como texto, orientacion e idioma.",
+    "Conservar timespan como fecha y derivar anio de esa fecha.",
+    "Omitir remarks, preliminary_decision, evaluation y confidence del CSV."
+  ],
+  "clave_evaluacion": [
+    "articulo_id",
+    "evaluacion_id"
+  ],
+  "grupo_particion": "articulo_id",
+  "variable_predictora": "texto",
+  "objetivo_original": "orientation (percepción del sentimiento del texto)",
+  "mapeo_objetivo_tres_clases": {
+    "-2": "negativo",
+    "-1": "negativo",
+    "0": "neutral",
+    "1": "positivo",
+    "2": "positivo"
+  },
+  "nota_objetivo": "La agrupación en tres clases es una adaptación de este proyecto. Orientation no es evaluation ni la decisión editorial de aceptación.",
+  "nota_modelo": "Los identificadores, fecha, año, idioma y orientación no se usan como características predictoras. Los identificadores sirven para auditoría y para mantener las evaluaciones de un artículo en una misma partición.",
+  "estadisticas": {
+    "objetos_articulo_originales": 172,
+    "articulos_con_evaluaciones": 169,
+    "objetos_articulo_sin_evaluaciones": 3,
+    "evaluaciones_originales": 405,
+    "idiomas_originales": {
+      "en": 17,
+      "es": 388
+    },
+    "evaluaciones_espanol_csv": 388,
+    "evaluaciones_espanol_texto_vacio": 6,
+    "evaluaciones_espanol_texto_no_vacio": 382,
+    "articulos_espanol_texto_no_vacio": 168,
+    "orientacion_csv": {
+      "-2": 35,
+      "-1": 137,
+      "0": 110,
+      "1": 91,
+      "2": 15
+    },
+    "tres_clases_texto_no_vacio": {
+      "negativo": 172,
+      "neutral": 104,
+      "positivo": 106
+    },
+    "anios": [
+      2010,
+      2013,
+      2014,
+      2015
+    ]
+  },
+  "atribucion": "Keith, B. (2017). Paper Reviews [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C50G60. CC BY 4.0. articulos_es.csv es un subconjunto derivado en español."
+}

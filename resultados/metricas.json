@@ -1,0 +1,105 @@
+{
+  "ejecutado_utc": "2026-10-03T09:06:17.555769+00:00",
+  "sha256_dataset": "12cae78bbc1b73c852c70bde718dabc4ec9bc09969c97e50203ab0707698b81b",
+  "versiones": {
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2"
+  },
+  "semilla": 42,
+  "auditoria": {
+    "filas_origen": 405,
+    "filas_espanol": 388,
+    "filas_con_nulos": 0,
+    "textos_vacios_originales": 6,
+    "duplicados_pares": 0,
+    "filas_tras_4_1": 382,
+    "textos_vacios_limpieza": 0,
+    "textos_con_etiquetas_contradictorias": 0,
+    "duplicados_texto_limpio": 0,
+    "filas_modelado": 382
+  },
+  "idioma": "es",
+  "fuente": "Paper Reviews (UCI)",
+  "etiqueta_origen": "orientation",
+  "predictor": "text",
+  "grupo": "articulo_id",
+  "particion": "primer pliegue StratifiedGroupKFold(5, shuffle=True, random_state=42)",
+  "articulos_entrenamiento": 132,
+  "articulos_prueba": 36,
+  "sha256_origen": "5ea7a36d2655b89db2b73c999f086a3df607089ebd11ebeeb122105d7f0de888",
+  "entrenamiento": 307,
+  "prueba": 75,
+  "folds": 5,
+  "config_tfidf": {
+    "max_features": 5000,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "min_df": 2,
+    "max_df": 0.95,
+    "stop_words": null,
+    "sublinear_tf": true
+  },
+  "modelo_seleccionado": "Linear SVM",
+  "criterio_seleccion": "F1 macro CV exclusivamente en entrenamiento",
+  "resultados_cv": [
+    {
+      "Modelo": "Linear SVM",
+      "F1_macro_CV": 0.5132814429452033,
+      "Desviacion_CV": 0.06448685157412928,
+      "Parametros": "{\"modelo__C\": 10}",
+      "Segundos": 3.748383600031957
+    },
+    {
+      "Modelo": "Logistic Regression",
+      "F1_macro_CV": 0.512280692572111,
+      "Desviacion_CV": 0.09068514260469876,
+      "Parametros": "{\"modelo__C\": 0.1}",
+      "Segundos": 5.030690699990373
+    },
+    {
+      "Modelo": "Multinomial Naive Bayes",
+      "F1_macro_CV": 0.41540724921466915,
+      "Desviacion_CV": 0.05641099834886888,
+      "Parametros": "{\"modelo__alpha\": 0.1}",
+      "Segundos": 3.825273800001014
+    }
+  ],
+  "resultados_prueba": [
+    {
+      "Modelo": "Logistic Regression",
+      "Accuracy": 0.5866666666666667,
+      "Precision_macro": 0.525952380952381,
+      "Recall_macro": 0.5425685425685426,
+      "F1_macro": 0.511864067966017,
+      "Seleccionado_por_CV": false
+    },
+    {
+      "Modelo": "Multinomial Naive Bayes",
+      "Accuracy": 0.5066666666666667,
+      "Precision_macro": 0.3775419982316534,
+      "Recall_macro": 0.43001443001443,
+      "F1_macro": 0.376642964878259,
+      "Seleccionado_por_CV": false
+    },
+    {
+      "Modelo": "Linear SVM",
+      "Accuracy": 0.4666666666666667,
+      "Precision_macro": 0.3796296296296296,
+      "Recall_macro": 0.41125541125541126,
+      "F1_macro": 0.3877233877233877,
+      "Seleccionado_por_CV": true
+    },
+    {
+      "Modelo": "Base: clase mayoritaria",
+      "Accuracy": 0.44,
+      "Precision_macro": 0.14666666666666667,
+      "Recall_macro": 0.3333333333333333,
+      "F1_macro": 0.20370370370370372,
+      "Seleccionado_por_CV": false
+    }
+  ]
+}

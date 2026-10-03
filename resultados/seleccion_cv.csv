@@ -1,0 +1,4 @@
+Modelo,F1_macro_CV,Desviacion_CV,Parametros,Segundos
+Linear SVM,0.5132814429452033,0.06448685157412928,"{""modelo__C"": 10}",3.748383600031957
+Logistic Regression,0.512280692572111,0.09068514260469876,"{""modelo__C"": 0.1}",5.030690699990373
+Multinomial Naive Bayes,0.41540724921466915,0.05641099834886888,"{""modelo__alpha"": 0.1}",3.825273800001014
