@@ -129,6 +129,17 @@ El conjunto de prueba tiene solo 75 evaluaciones. Unos pocos errores pueden camb
 
 El desarrollo sigue un recorrido: cargar y comprobar los datos, crear las etiquetas, limpiar el texto, separar los artículos, aprender la representación numérica, ajustar los modelos, evaluar y clasificar un comentario nuevo. **Cada una de las 23 celdas de código del notebook [notebooks/sentiment_analysis.ipynb](notebooks/sentiment_analysis.ipynb) tiene una explicación inmediatamente encima**, con su objetivo, operaciones y lectura de las salidas. La numeración cuenta celdas de código, no bloques de texto ni el número de ejecuciones que Jupyter muestra entre corchetes.
 
+Para localizar rápidamente la parte de los modelos, distinga estos momentos. **El proyecto entrena sus modelos con el dataset; no carga un modelo previamente entrenado desde un archivo.**
+
+| Momento | Celda | Operación principal | Estado del modelo |
+| --- | --- | --- | --- |
+| Importar las clases | 1 | `from sklearn... import ...` | Las herramientas quedan disponibles para utilizarlas. |
+| Crear los candidatos | 15 | `LogisticRegression(...)`, `MultinomialNB()` y `LinearSVC(...)` | Son objetos configurados, todavía sin entrenar. |
+| Entrenar y comparar configuraciones | 17 | `busqueda.fit(X_train_text, y_train, groups=grupos_train)` | Cada candidato aprende dentro de los pliegues de entrenamiento. |
+| Recuperar el candidato ajustado de cada familia | 17 | `busqueda.best_estimator_` | Con `refit=True`, el Pipeline ganador se reajusta con todo el entrenamiento. |
+| Seleccionar la familia final | 17 | `mejor_modelo = mejores_modelos[mejor_nombre]` | Se conserva el Pipeline con mayor F1 macro de validación cruzada. |
+| Predecir comentarios | 18 y 23 | `modelo.predict(...)` y `mejor_modelo.predict(...)` | Se aplica lo aprendido, sin volver a entrenar. |
+
 ### Guía para localizar cada paso
 
 | Celda | Qué hace | Qué revisar |
@@ -163,9 +174,15 @@ El desarrollo sigue un recorrido: cargar y comprobar los datos, crear las etique
 | --- | --- |
 | `df_original` / `df` | Tabla cargada / tabla de trabajo que se prepara para modelar. |
 | `auditoria` | Diccionario con cantidades y exclusiones del proceso. |
+| `X` / `y` / `grupos` | Comentarios limpios / etiquetas conocidas / identificadores de artículo para organizar las particiones. |
 | `X_train_text` / `X_test_text` | Comentarios limpios de entrenamiento / prueba. |
 | `y_train` / `y_test` | Etiquetas conocidas de entrenamiento / prueba. |
+| `grupos_train` / `grupos_test` | Artículos de entrenamiento / prueba; no son entradas predictoras. |
 | `X_train` / `X_test` | Matrices TF-IDF didácticas; no son la entrada de GridSearchCV. |
+| `modelos` | Diccionario con los tres clasificadores configurados antes de entrenar. |
+| `pipeline` | Secuencia que conecta el vectorizador `tfidf` con el clasificador `modelo`. |
+| `busqueda` | Objeto GridSearchCV que compara hiperparámetros mediante validación cruzada. |
+| `puntajes_cv` | Mejor F1 macro medio de validación cruzada de cada familia. |
 | `mejores_modelos` / `mejor_modelo` | Candidatos reajustados / Pipeline seleccionado mediante CV. |
 | `y_pred_final` | Predicciones del modelo seleccionado sobre la prueba. |
 | `def` / `return` | Define una función / entrega su resultado al código que la utiliza. |
@@ -177,13 +194,257 @@ El desarrollo sigue un recorrido: cargar y comprobar los datos, crear las etique
 | `predict` | Utiliza un modelo entrenado para obtener etiquetas. |
 | `display` / `print` / `to_csv` | Muestra tablas o texto enriquecido / imprime mensajes / guarda tablas. |
 
-### Cómo explicar la práctica
+### Partes importantes del código para la exposición
 
-Las etiquetas se conocen antes de entrenar: proceden de `orientation`. El modelo aprende una relación entre los términos del comentario y esas etiquetas. Los identificadores sirven para agrupar y revisar; no revelan el sentimiento al algoritmo.
+Los fragmentos siguientes seleccionan las líneas relevantes del notebook. Sirven para explicar el desarrollo junto con las celdas completas; deben ejecutarse dentro de su secuencia, porque utilizan variables creadas anteriormente.
 
-Hay tres usos distintos de los datos: **entrenamiento** para aprender; **validación cruzada dentro del entrenamiento** para elegir opciones; y **prueba reservada** para medir el resultado de esa elección. Cada Pipeline aprende su TF-IDF dentro del pliegue correspondiente. Así la prueba y la validación no deciden el vocabulario con el que se entrenan los modelos.
+#### 1. Preparación y carga de los datos — celdas 1 a 6
 
-Para exponer las métricas, use un ejemplo real de las salidas: SVM acierta 35 de 75 comentarios, por lo que Accuracy es 46,67 %. Su F1 macro de prueba es 0,3877. La matriz y el informe por clase muestran que neutral se reconoce peor. Estos resultados explican tanto el funcionamiento como los límites de la práctica; la demostración no garantiza que un comentario nuevo se clasifique correctamente.
+La celda 1 importa bibliotecas y define `SEMILLA = 42`, `N_JOBS = 2` y `CLASES`. `SEMILLA` permite repetir las particiones con los mismos datos, orden y versiones. `N_JOBS` limita a dos los trabajos paralelos de la búsqueda. `CLASES` fija el orden negativo, neutral y positivo en los informes y matrices. `RAIZ` localiza la carpeta del proyecto mediante `Path`, y `SALIDA` identifica `resultados/`.
+
+En la celda 2 se leen los datos:
+
+```python
+ruta_dataset = RAIZ / "data" / "articulos_es.csv"
+df_original = pd.read_csv(ruta_dataset, keep_default_na=False)
+```
+
+`ruta_dataset` identifica el CSV y `pd.read_csv` lo convierte en una tabla de pandas. `keep_default_na=False` conserva los campos vacíos como cadenas, para identificarlos y excluirlos de forma explícita. La tabla inicial contiene 388 evaluaciones en español.
+
+Antes de leer el CSV, la misma celda ejecuta `scripts/descargar_dataset.py` mediante `subprocess.run` y el Python del kernel, `sys.executable`. El script verifica el original y prepara el CSV. La celda consulta `source.json`, calcula SHA-256 y compara la huella del CSV con la registrada. Esta comprobación detecta cambios en los bytes del archivo; no evalúa la calidad de las etiquetas.
+
+Las celdas 3 a 6 comprueban el esquema, conservan las columnas necesarias y retiran textos vacíos y duplicados exactos. `df_original` conserva la tabla cargada y `df` contiene la tabla de trabajo. `auditoria` registra los conteos. Los `assert` detienen el desarrollo si una condición, como la unicidad de los identificadores, no se cumple.
+
+**Para exponer:** “Primero verificamos la procedencia y cargamos el CSV. Cada fila representa una evaluación. Después excluimos seis comentarios vacíos y conservamos 382 para el análisis”.
+
+#### 2. Etiquetas, limpieza y variables de entrada — celdas 7, 9 y 10
+
+La celda 7 define `etiquetar_sentimiento()` y la aplica a la orientación original:
+
+```python
+df["sentimiento"] = df["orientacion"].apply(etiquetar_sentimiento)
+```
+
+`apply` llama a la función para cada valor de `orientacion`. La función asigna negativo a −2 y −1, neutral a 0 y positivo a 1 y 2. Estas etiquetas son las respuestas conocidas que permiten el aprendizaje supervisado. Esta asignación no es una predicción del modelo ni una búsqueda de palabras positivas o negativas.
+
+La celda 9 define la limpieza utilizada tanto para preparar el dataset como para procesar un comentario nuevo:
+
+```python
+def limpiar_texto(texto):
+    texto = unicodedata.normalize("NFC", html.unescape(str(texto))).lower()
+    texto = re.sub(r"<[^>]+>", " ", texto)
+    texto = re.sub(r"https?://\S+|www\.\S+", " ", texto)
+    texto = "".join(c if c.isalpha() or c.isspace() else " " for c in texto)
+    return re.sub(r"\s+", " ", texto).strip()
+```
+
+La primera línea decodifica entidades HTML, unifica la representación Unicode y convierte a minúsculas. Los dos `re.sub` siguientes retiran etiquetas HTML y URLs. `isalpha()` conserva letras Unicode, incluidas tildes y ñ; `isspace()` conserva espacios. Otros caracteres se sustituyen por espacios. La última línea compacta espacios repetidos y retira los de los extremos. La función no elimina palabras por considerarlas frecuentes, por lo que conserva negaciones como “no”.
+
+La función se aplica con `df["texto"].apply(limpiar_texto)` para crear `texto_limpio`. Después se revisan textos que quedaron vacíos y repeticiones normalizadas. La celda 10 separa las funciones de cada columna:
+
+```python
+X = df["texto_limpio"]
+y = df["sentimiento"]
+grupos = df["articulo_id"]
+```
+
+`X` contiene la información que recibirá el clasificador. `y` contiene lo que debe aprender a predecir. `grupos` organiza las particiones por artículo; no se concatena con el texto ni se introduce como característica. El orden de las tres series debe mantenerse alineado para que cada comentario corresponda a su etiqueta y artículo.
+
+**Para exponer:** “La orientación original proporciona la respuesta conocida. Limpiamos el comentario sin eliminar las negaciones. El modelo recibe solo texto; los artículos sirven para organizar la separación”.
+
+#### 3. Reserva de prueba por artículo — celda 11
+
+```python
+separador = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=SEMILLA)
+indices_train, indices_test = next(separador.split(X, y, groups=grupos))
+X_train_text, X_test_text = X.iloc[indices_train], X.iloc[indices_test]
+y_train, y_test = y.iloc[indices_train], y.iloc[indices_test]
+grupos_train, grupos_test = grupos.iloc[indices_train], grupos.iloc[indices_test]
+assert set(grupos_train).isdisjoint(grupos_test)
+assert set(X_train_text).isdisjoint(X_test_text)
+```
+
+`split` genera índices de particiones que respetan los grupos y tratan de conservar las proporciones de las clases. `next` toma la primera división de los cinco pliegues como reserva de prueba. `iloc` selecciona las filas por posición y aplica los mismos índices a textos, etiquetas y artículos.
+
+Quedan 307 evaluaciones para entrenamiento y 75 para prueba. `isdisjoint` comprueba que no haya artículos ni textos iguales compartidos entre ambos conjuntos. La prueba permanece reservada mientras se buscan hiperparámetros; no se utiliza para decidir el vocabulario ni seleccionar el modelo.
+
+**Para exponer:** “Separamos artículos completos. Así comprobamos el resultado sobre evaluaciones de artículos diferentes de los utilizados para entrenar”.
+
+#### 4. Conversión del texto a números — celdas 12 a 14
+
+Los clasificadores utilizan características numéricas. La celda 12 configura el vectorizador:
+
+```python
+config_tfidf = dict(max_features=5000, ngram_range=(1, 2), min_df=2,
+                    max_df=0.95, stop_words=None, sublinear_tf=True)
+tfidf = TfidfVectorizer(**config_tfidf)
+```
+
+`config_tfidf` reúne los parámetros y `**config_tfidf` los entrega como argumentos al constructor. Crear `tfidf` todavía no aprende un vocabulario. Las opciones representan palabras y pares de palabras, limitan el vocabulario y conservan negaciones. Los valores y su propósito están detallados en 4.2.
+
+La celda 13 muestra la diferencia entre aprender y aplicar la transformación:
+
+```python
+tfidf_demostracion = clone(tfidf)
+X_train = tfidf_demostracion.fit_transform(X_train_text)
+X_test = tfidf_demostracion.transform(X_test_text)
+```
+
+`clone` crea un vectorizador independiente con la misma configuración. `fit_transform` aprende el vocabulario y los pesos IDF con el entrenamiento y obtiene su matriz. `transform` representa la prueba usando ese vocabulario, sin aprender uno nuevo. Cada fila corresponde a un comentario y cada columna a una característica textual. La celda 14 muestra las dimensiones y algunos términos del vocabulario.
+
+**Estas matrices son didácticas.** La búsqueda de la celda 17 recibe `X_train_text`, no `X_train`. Sus Pipelines ajustan vectorizadores independientes dentro de cada pliegue. Utilizar un vocabulario aprendido con todas las filas antes de validar revelaría información de la validación.
+
+**Para exponer:** “TF-IDF transforma palabras y pares de palabras en valores numéricos. Mostramos cómo funciona y, durante la búsqueda, lo aprendemos de nuevo dentro de cada pliegue de entrenamiento”.
+
+#### 5. Importación y creación de los tres modelos — celdas 1 y 15
+
+La celda 1 importa las clases de scikit-learn:
+
+```python
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.svm import LinearSVC
+```
+
+Importar permite utilizar las implementaciones de los algoritmos. No descarga pesos ni restaura un modelo ya entrenado. La celda 15 crea los candidatos:
+
+```python
+modelos = {
+    "Logistic Regression": LogisticRegression(max_iter=2000, class_weight="balanced", random_state=SEMILLA),
+    "Multinomial Naive Bayes": MultinomialNB(),
+    "Linear SVM": LinearSVC(class_weight="balanced", max_iter=10000, dual="auto", random_state=SEMILLA),
+}
+```
+
+`modelos` es un diccionario: cada clave identifica una familia y cada valor es un objeto que conserva su configuración. Regresión logística aprende pesos asociados a las características; Naive Bayes utiliza un modelo probabilístico; SVM aprende fronteras de decisión por margen. En este punto ninguno de los tres candidatos ha visto los comentarios.
+
+`class_weight="balanced"` ajusta el peso de las clases durante el entrenamiento de regresión logística y SVM. `max_iter` establece un límite de iteraciones del optimizador; no representa el número de comentarios ni el número de pliegues. `dual="auto"` permite a LinearSVC elegir la formulación de optimización compatible con los datos y parámetros. Las opciones no garantizan por sí solas un mejor resultado.
+
+**Para exponer:** “Aquí creamos tres candidatos con sus parámetros iniciales. Todavía no están entrenados; aprenderán al ejecutar `fit` en la búsqueda de la celda 17”.
+
+#### 6. Entrenamiento, búsqueda y selección final — celdas 16 y 17
+
+La celda 16 define las configuraciones que se compararán:
+
+```python
+parametros = {
+    "Logistic Regression": {"modelo__C": [0.1, 1, 10]},
+    "Multinomial Naive Bayes": {"modelo__alpha": [0.1, 0.5, 1.0]},
+    "Linear SVM": {"modelo__C": [0.1, 1, 10]},
+}
+```
+
+Los nombres contienen dos guiones bajos: `modelo__C` significa “cambiar el parámetro `C` del paso llamado `modelo`”. `C` controla inversamente la regularización en regresión logística y SVM. `alpha` controla el suavizado en Naive Bayes. Esta celda también crea `cv`, con cinco pliegues agrupados dentro del entrenamiento, y comprueba que no compartan artículos.
+
+El siguiente fragmento de la celda 17 reúne las operaciones centrales del bucle. Se omiten los registros de tiempos y archivos CSV:
+
+```python
+for nombre, modelo in modelos.items():
+    pipeline = Pipeline([("tfidf", clone(tfidf)), ("modelo", clone(modelo))])
+    busqueda = GridSearchCV(
+        pipeline, parametros[nombre], scoring="f1_macro", cv=cv,
+        n_jobs=N_JOBS, pre_dispatch=N_JOBS, refit=True, error_score="raise",
+    )
+    with parallel_backend("threading"), threadpool_limits(limits=1):
+        busqueda.fit(X_train_text, y_train, groups=grupos_train)
+    mejores_modelos[nombre] = busqueda.best_estimator_
+    puntajes_cv[nombre] = float(busqueda.best_score_)
+```
+
+`for` recorre las tres familias. `Pipeline` conecta dos pasos: `tfidf` representa el texto y `modelo` aprende a clasificar esa representación. Las copias creadas con `clone` evitan reutilizar un objeto previamente ajustado. La limpieza ya se realizó antes; no forma parte de este Pipeline.
+
+**El entrenamiento real comienza en `busqueda.fit(...)`.** `X_train_text` aporta comentarios, `y_train` aporta respuestas conocidas y `groups=grupos_train` organiza los pliegues. Para cada configuración, GridSearchCV aprende TF-IDF y ajusta el clasificador solo con la parte de entrenamiento del pliegue; calcula F1 macro sobre su validación. La parte reservada en `X_test_text` no interviene. [Funcionamiento de Pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html).
+
+`scoring="f1_macro"` establece qué métrica se busca mejorar. `refit=True` reajusta el candidato ganador de cada familia con los 307 comentarios de entrenamiento. `n_jobs` y `pre_dispatch` limitan los trabajos paralelos; el bloque `with` controla el backend y los hilos internos. `error_score="raise"` hace visible un error de ajuste en vez de sustituirlo por una puntuación. Se realizan 45 ajustes de validación —tres familias, tres valores y cinco pliegues— y tres reajustes finales.
+
+`best_estimator_` devuelve el Pipeline ganador de esa familia, ya ajustado. `best_score_` devuelve su F1 macro medio de validación cruzada; no contiene el resultado de prueba. Se almacenan en `mejores_modelos` y `puntajes_cv`, respectivamente. [Atributos y reajuste de GridSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html).
+
+Al finalizar el bucle se escoge la familia final:
+
+```python
+mejor_nombre = max(puntajes_cv, key=puntajes_cv.get)
+mejor_modelo = mejores_modelos[mejor_nombre]
+```
+
+`max` compara los valores de `puntajes_cv`, utilizando `get` para consultar el puntaje de cada nombre. `mejor_nombre` guarda el nombre ganador y `mejor_modelo` recupera su Pipeline entrenado. En la ejecución guardada se selecciona Linear SVM con `C=10` y F1 macro CV de 0,5133. La selección se completa antes de examinar la prueba.
+
+**Para exponer:** “Comparamos configuraciones usando validación cruzada dentro del entrenamiento. Cada pliegue aprende su TF-IDF. Luego reajustamos el ganador de cada familia y elegimos el de mayor F1 macro de validación”.
+
+#### 7. Predicción sobre prueba y cálculo de métricas — celdas 18, 19, 21 y 22
+
+La celda 18 recorre `mejores_modelos` y utiliza estas líneas dentro del bucle:
+
+```python
+predicho = modelo.predict(X_test_text)
+predicciones[nombre] = predicho
+resultados.append({"Modelo": nombre, **calcular_metricas(y_test, predicho)})
+```
+
+`predict` aplica el TF-IDF ya aprendido y el clasificador ajustado a los 75 comentarios de prueba. `predicho` contiene las etiquetas estimadas. `predicciones` conserva las salidas de cada familia para examinarlas después. `calcular_metricas` compara las etiquetas conocidas `y_test` con esas predicciones. `**` incorpora el diccionario de métricas a la fila de resultados.
+
+```python
+def calcular_metricas(real, predicho):
+    return {
+        "Accuracy": accuracy_score(real, predicho),
+        "Precision_macro": precision_score(real, predicho, labels=CLASES, average="macro", zero_division=0),
+        "Recall_macro": recall_score(real, predicho, labels=CLASES, average="macro", zero_division=0),
+        "F1_macro": f1_score(real, predicho, labels=CLASES, average="macro", zero_division=0),
+    }
+```
+
+Accuracy mide aciertos sobre el total. Para una clase, Precision indica qué proporción de las predicciones de esa clase son correctas; Recall indica qué proporción de sus ejemplos reales se recuperan. F1 combina ambas. `average="macro"` calcula cada métrica por clase y promedia con el mismo peso para las tres. F1 macro promedia los F1 de las clases; no se obtiene combinando Precision macro con Recall macro. `zero_division=0` asigna cero cuando un cociente queda indefinido. [Definición de F1 y promedio macro](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html).
+
+El `DummyClassifier` de la misma celda es una referencia que siempre elige la clase mayoritaria. Su `fit` aprende cuál es esa clase a partir de `y_train`; no vuelve a entrenar los tres modelos. La celda 19 muestra la comparación, manteniendo la selección realizada por validación cruzada.
+
+La celda 21 recupera `y_pred_final = predicciones[mejor_nombre]`. `classification_report` separa Precision, Recall, F1 y soporte por clase; soporte es la cantidad de ejemplos reales de esa clase. La celda 22 construye `confusion_matrix(y_test, y_pred_final, labels=CLASES)`. Las filas indican la clase real, las columnas la predicha y la diagonal contiene los aciertos. La matriz normalizada divide cada fila por su soporte para mostrar proporciones.
+
+Para comprobar la interpretación con la salida guardada, SVM acierta 35 de 75 comentarios: Accuracy es 46,67 %. Su F1 macro de prueba es 0,3877. Recupera solo 1 de los 21 neutrales. El informe y la matriz permiten explicar este comportamiento además de presentar una cifra global.
+
+**Para exponer:** “Evaluamos los modelos sobre datos reservados. Accuracy muestra el acierto global; F1 macro y el informe por clase permiten observar el rendimiento de las tres clases por separado”.
+
+#### 8. Registro de resultados y estado del modelo — celda 20
+
+La celda 20 crea `resumen` con la fuente, huellas, versiones, semilla, partición, configuración y métricas, y lo escribe en JSON:
+
+```python
+(SALIDA / "metricas.json").write_text(json.dumps(resumen, indent=2, ensure_ascii=False), encoding="utf-8")
+```
+
+`json.dumps` convierte el diccionario en texto. `indent=2` facilita su lectura y `ensure_ascii=False` conserva los caracteres españoles. `write_text` guarda ese texto en `resultados/metricas.json` con codificación UTF-8. Otros bloques guardan tablas con `to_csv` y figuras con `savefig`.
+
+**Estos archivos documentan el experimento; no almacenan el objeto `mejor_modelo`.** El notebook guarda código y salidas, pero el Pipeline entrenado permanece en la memoria del kernel durante la sesión. El proyecto no utiliza `joblib.dump`, `joblib.load` ni un archivo de pesos para restaurarlo. Reiniciar o cerrar el kernel elimina las variables: hay que ejecutar de nuevo las celdas en orden para reconstruir el modelo, aunque todavía se vean las salidas guardadas.
+
+**Para exponer:** “Guardamos evidencias para revisar el experimento. El modelo entrenado sigue en la memoria de Jupyter y se reutiliza mientras esa sesión permanezca activa”.
+
+#### 9. Demostración de la práctica con un comentario nuevo — celda 23
+
+La celda 23 comprueba primero que existan `pd`, `limpiar_texto` y `mejor_modelo`. Si faltan, muestra un mensaje que indica ejecutar las celdas desde el inicio. Después define la función de predicción:
+
+```python
+def predecir_sentimiento(texto):
+    if not isinstance(texto, str) or not texto.strip():
+        raise ValueError("Escriba una evaluación no vacía en español.")
+    texto_limpio = limpiar_texto(texto)
+    vector = mejor_modelo.named_steps["tfidf"].transform([texto_limpio])
+    if not texto_limpio or vector.nnz == 0:
+        raise ValueError("El comentario no contiene términos conocidos por el modelo.")
+    return str(mejor_modelo.predict([texto_limpio])[0])
+```
+
+`isinstance` comprueba que la entrada sea una cadena y `strip` permite detectar texto vacío. `limpiar_texto` aplica la misma preparación utilizada para los comentarios del dataset. `named_steps["tfidf"]` accede al vectorizador entrenado dentro del Pipeline. Su `transform` representa el comentario con el vocabulario existente. `vector.nnz` cuenta las posiciones con valor distinto de cero; si es cero, ninguna característica conocida representa esa entrada.
+
+En `predict([texto_limpio])`, los corchetes forman una colección con un solo comentario, que es el formato esperado. El Pipeline aplica de nuevo su transformación y después el clasificador, sin ajustar sus parámetros. `[0]` extrae la primera y única etiqueta; `str` la entrega como texto. La transformación anterior se utiliza para comprobar el vocabulario, mientras que `predict` realiza la clasificación completa. Este control no detecta automáticamente el idioma ni garantiza un acierto.
+
+Para la exposición, cambie únicamente el contenido de `mi_evaluacion` y ejecute esa celda con el kernel entrenado:
+
+```python
+mi_evaluacion = "El artículo no explica la metodología y sus conclusiones no están justificadas."
+print("Sentimiento predicho:", predecir_sentimiento(mi_evaluacion))
+```
+
+Los ejemplos escritos en la demo no forman parte del conjunto de prueba. La predicción representa el sentimiento estimado del comentario; no determina la aceptación ni la calidad científica del artículo.
+
+**Para exponer:** “Limpiamos el comentario nuevo con la misma función, comprobamos que tenga términos conocidos y utilizamos el Pipeline seleccionado. Esta celda predice sin volver a entrenar”.
 
 ### Preguntas para explicar el desarrollo
 

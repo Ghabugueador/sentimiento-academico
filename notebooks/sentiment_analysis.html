@@ -7826,6 +7826,7 @@ a.anchor-link {
 <li><code>versiones</code> registra las versiones instaladas. <code>plt.rcParams.update(...)</code> configura el tamaño y la apariencia de los gráficos; <code>pd.set_option(...)</code> limita cuánto texto muestra una tabla.</li>
 </ul>
 <p><strong>Salida:</strong> las versiones de las librerías. Si aparece <code>FileNotFoundError</code>, abra Jupyter desde la carpeta del proyecto o desde <code>notebooks/</code>.</p>
+<p><strong>Ubicación de los modelos:</strong> esta celda importa las clases de scikit-learn. Los candidatos se crean en la celda 15 y se entrenan en la 17; no se carga un modelo previamente entrenado desde un archivo.</p>
 </div>
 </div>
 </div>
@@ -7918,6 +7919,7 @@ a.anchor-link {
 <li><code>auditoria</code> empieza a registrar los conteos del proceso. <code>head(5)</code> muestra solo cinco filas; <code>str.len()</code> añade su longitud en caracteres a la vista.</li>
 </ol>
 <p><strong>Salida:</strong> 388 evaluaciones en español de las 405 originales. Todavía se incluyen seis comentarios vacíos. Los 17 comentarios en inglés no se traducen ni se utilizan.</p>
+<p><strong>Para exponer:</strong> “Primero verificamos la procedencia y cargamos el CSV. Cada fila representa una evaluación. Después excluimos seis comentarios vacíos y conservamos 382 para el análisis”.</p>
 </div>
 </div>
 </div>
@@ -8688,6 +8690,7 @@ Name: count, dtype: int64
 <p><code>apply(limpiar_texto)</code> crea <code>texto_limpio</code>. Después se excluyen textos que quedaron vacíos y se cuentan repeticiones y etiquetas contradictorias. <code>groupby(...).nunique().gt(1)</code> detecta si un mismo texto limpio tiene más de una etiqueta. La eliminación de duplicados conserva la primera aparición; en esta ejecución no hay conflictos ni duplicados normalizados, y permanecen 382 evaluaciones.</p>
 <p>Los <code>assert</code> comprueban ejemplos concretos y que <code>no</code> no desaparezca. La tabla usa frases redactadas para mostrar el antes y el después; esas frases no se añaden al entrenamiento.</p>
 <p><strong>Límite:</strong> la limpieza pierde cifras y puntuación, que también pueden expresar significado. No se aplica stemming ni lematización. TF-IDF se configura después de separar los datos.</p>
+<p><strong>Para exponer:</strong> “La orientación original proporciona la respuesta conocida. Limpiamos el comentario sin eliminar las negaciones. El modelo recibe solo texto; los artículos sirven para organizar la separación”.</p>
 </div>
 </div>
 </div>
@@ -8899,6 +8902,7 @@ Name: count, dtype: int64
 <p>Los <code>assert</code> comprueban que no hay artículos ni textos limpios compartidos, que ninguna fila se pierde y que ambos conjuntos contienen las tres clases. La tabla presenta sus conteos.</p>
 <p><strong>Salida:</strong> 307 evaluaciones de 132 artículos para entrenamiento y 75 evaluaciones de 36 artículos para prueba. La proporción no tiene que ser exactamente 80/20 porque los artículos no se dividen.</p>
 <p><strong>Archivos:</strong> <code>particion.csv</code> resume los conteos; <code>indices_particion.csv</code> permite localizar el conjunto asignado a cada evaluación. La prueba queda reservada mientras se eligen modelo e hiperparámetros.</p>
+<p><strong>Para exponer:</strong> “Separamos artículos completos. Así comprobamos el resultado sobre evaluaciones de artículos diferentes de los utilizados para entrenar”.</p>
 </div>
 </div>
 </div>
@@ -9088,6 +9092,7 @@ Prueba: 75 evaluaciones; 36 artículos
 </ul>
 <p><strong>Por qué importa:</strong> aprender TF-IDF antes de separar los datos dejaría que la prueba influyera en la representación. Durante la validación cruzada también debe evitarse esa influencia de cada pliegue de validación.</p>
 <p><strong>Alcance:</strong> estas matrices son didácticas. La búsqueda de la celda 17 recibe texto limpio y aprende su propio TF-IDF dentro de cada <code>Pipeline</code>. No utiliza <code>X_train</code> ni <code>X_test</code> de esta demostración. Esta celda no muestra una tabla; la siguiente inspecciona las matrices.</p>
+<p><strong>Para exponer:</strong> “TF-IDF transforma palabras y pares de palabras en valores numéricos. Mostramos cómo funciona y, durante la búsqueda, lo aprendemos de nuevo dentro de cada pliegue de entrenamiento”.</p>
 </div>
 </div>
 </div>
@@ -9200,6 +9205,7 @@ Primeros términos: ['abc', 'abejas', 'abierta', 'abierta la', 'abiertas', 'abie
 <p><code>modelos</code> es un diccionario: sus claves son los nombres que aparecerán en los resultados y sus valores son los objetos de los algoritmos. Crearlos no equivale a entrenarlos; el ajuste ocurre en la celda 17.</p>
 <p><code>class_weight="balanced"</code> en regresión logística y SVM aumenta el peso relativo de las clases menos frecuentes durante el ajuste. No crea comentarios ni cambia el reparto de prueba. <code>max_iter</code> establece el máximo de iteraciones del optimizador. <code>random_state</code> fija la semilla donde el algoritmo utiliza aleatoriedad; <code>dual="auto"</code> permite a SVM elegir la formulación de optimización según el problema.</p>
 <p><strong>Salida:</strong> los tres modelos quedan disponibles en memoria para compararlos con la misma partición y representación.</p>
+<p><strong>Para exponer:</strong> “Aquí creamos tres candidatos con sus parámetros iniciales. Todavía no están entrenados; aprenderán al ejecutar <code>fit</code> en la búsqueda de la celda 17”.</p>
 </div>
 </div>
 </div>
@@ -9363,8 +9369,11 @@ Primeros términos: ['abc', 'abejas', 'abierta', 'abierta la', 'abiertas', 'abie
 <li><code>error_score="raise"</code>: hace visible un fallo de entrenamiento en lugar de ocultarlo con una puntuación sustitutiva.</li>
 </ul>
 <p>Se comparan <strong>3 algoritmos × 3 configuraciones × 5 pliegues = 45 ajustes de validación</strong>, además de tres reajustes finales. Por eso esta celda puede tardar más y mantener ocupado el kernel.</p>
-<p><code>best_params_</code> guarda la configuración ganadora, <code>best_score_</code> su F1 medio y <code>best_estimator_</code> el <code>Pipeline</code> reajustado. <code>mejores_modelos</code> conserva los tres candidatos. <code>max(puntajes_cv, key=puntajes_cv.get)</code> elige el de mayor F1 medio y lo guarda como <code>mejor_modelo</code>.</p>
+<p><strong>Línea que inicia el entrenamiento:</strong> <code>busqueda.fit(X_train_text, y_train, groups=grupos_train)</code>. Recibe textos y etiquetas de entrenamiento; los grupos organizan los pliegues y no se utilizan como características predictoras.</p>
+<p><code>best_params_</code> guarda la configuración ganadora de cada familia. <code>best_score_</code> contiene su F1 macro medio de validación cruzada, no su F1 de prueba. <code>best_estimator_</code> recupera el Pipeline ganador, ya reajustado sobre todo el entrenamiento porque <code>refit=True</code>. <code>mejores_modelos</code> conserva esos tres Pipelines.</p>
+<p><code>mejor_nombre = max(puntajes_cv, key=puntajes_cv.get)</code> selecciona el nombre con mayor puntuación de CV. <code>mejor_modelo = mejores_modelos[mejor_nombre]</code> recupera su Pipeline entrenado. La prueba permanece reservada hasta la celda 18.</p>
 <p><strong>Salida guardada:</strong> Linear SVM con <code>C=10</code> y F1 macro CV de 0,5133. Regresión logística obtiene 0,5123: la diferencia es pequeña. <code>Desviacion_CV</code> mide la dispersión entre pliegues; no es un intervalo de confianza. <code>Segundos</code> mide duración. Los CSV de búsqueda y <code>seleccion_cv.csv</code> permiten revisar la selección, realizada antes de consultar la prueba.</p>
+<p><strong>Para exponer:</strong> “Comparamos configuraciones usando validación cruzada dentro del entrenamiento. Cada pliegue aprende su TF-IDF. Luego reajustamos el ganador de cada familia y elegimos el de mayor F1 macro de validación”.</p>
 </div>
 </div>
 </div>
@@ -9530,6 +9539,7 @@ Linear SVM | {'modelo__C': 10} | F1 macro CV: 0.5133
 <p><code>average="macro"</code> calcula cada métrica por clase y luego promedia las tres con el mismo peso. <strong>F1 macro es la media de los F1 por clase</strong>, no el F1 calculado a partir de Precision macro y Recall macro. <code>labels=CLASES</code> fija las clases evaluadas; <code>zero_division=0</code> asigna cero cuando el cociente no puede calcularse.</p>
 <p>El bucle ejecuta <code>.predict(X_test_text)</code> y guarda las salidas en <code>predicciones</code>. También ajusta <code>DummyClassifier(strategy="most_frequent")</code> solo con las etiquetas de entrenamiento: predice siempre negativo. Sus entradas de ceros son auxiliares; esta referencia no lee los textos.</p>
 <p><strong>Salida:</strong> <code>resultados_df</code>, guardada en <code>metricas_prueba.csv</code>. Las puntuaciones van de 0 a 1; por ejemplo, 0,4667 corresponde al 46,67 %. <code>Seleccionado_por_CV</code> identifica la elección ya realizada, sin volver a decidir desde la prueba.</p>
+<p><strong>Para exponer:</strong> “Evaluamos los modelos sobre datos reservados. Accuracy muestra el acierto global; F1 macro y el informe por clase permiten observar el rendimiento de las tres clases por separado”.</p>
 </div>
 </div>
 </div>
@@ -9706,6 +9716,7 @@ Linear SVM | {'modelo__C': 10} | F1 macro CV: 0.5133
 <p>El diccionario <code>resumen</code> reúne la fecha de ejecución en UTC, huellas de los archivos, versiones, semilla, exclusiones, idioma, fuente, predictor, etiqueta, agrupación, tamaños de conjuntos, configuración TF-IDF y resultados. La fecha describe cuándo se ejecutó el código; no es la fecha de los comentarios.</p>
 <p><code>json.dumps(..., indent=2, ensure_ascii=False)</code> convierte el diccionario en texto JSON legible y conserva los caracteres españoles. <code>write_text(..., encoding="utf-8")</code> lo escribe en <code>resultados/metricas.json</code>. <code>display(Markdown(...))</code> presenta las métricas principales usando los valores calculados.</p>
 <p><strong>Salida:</strong> un registro reproducible del experimento y un resumen del modelo seleccionado. El JSON guarda metadatos y resultados; <strong>no guarda el modelo entrenado</strong>. Al reiniciar el kernel, se deben ejecutar de nuevo las celdas de entrenamiento para utilizar la demostración.</p>
+<p><strong>Para exponer:</strong> “Guardamos evidencias para revisar el experimento. El modelo entrenado sigue en la memoria de Jupyter y se reutiliza mientras esa sesión permanezca activa”.</p>
 </div>
 </div>
 </div>
@@ -9922,6 +9933,55 @@ weighted avg     0.4078    0.4667    0.4283        75
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="4.5-Explicaci%C3%B3n-del-c%C3%B3digo">4.5 Explicación del código<a class="anchor-link" href="#4.5-Explicaci%C3%B3n-del-c%C3%B3digo">¶</a></h2><p>El desarrollo sigue un recorrido: cargar y comprobar los datos, crear las etiquetas, limpiar el texto, separar los artículos, aprender la representación numérica, ajustar los modelos, evaluar y clasificar un comentario nuevo. <strong>Cada una de las 23 celdas de código tiene una explicación inmediatamente encima</strong>, con su objetivo, operaciones y lectura de las salidas. La numeración cuenta celdas de código, no bloques de texto ni el número de ejecuciones que Jupyter muestra entre corchetes.</p>
+<p>Para localizar rápidamente la parte de los modelos, distinga estos momentos. <strong>El proyecto entrena sus modelos con el dataset; no carga un modelo previamente entrenado desde un archivo.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Momento</th>
+<th>Celda</th>
+<th>Operación principal</th>
+<th>Estado del modelo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Importar las clases</td>
+<td>1</td>
+<td><code>from sklearn... import ...</code></td>
+<td>Las herramientas quedan disponibles para utilizarlas.</td>
+</tr>
+<tr>
+<td>Crear los candidatos</td>
+<td>15</td>
+<td><code>LogisticRegression(...)</code>, <code>MultinomialNB()</code> y <code>LinearSVC(...)</code></td>
+<td>Son objetos configurados, todavía sin entrenar.</td>
+</tr>
+<tr>
+<td>Entrenar y comparar configuraciones</td>
+<td>17</td>
+<td><code>busqueda.fit(X_train_text, y_train, groups=grupos_train)</code></td>
+<td>Cada candidato aprende dentro de los pliegues de entrenamiento.</td>
+</tr>
+<tr>
+<td>Recuperar el candidato ajustado de cada familia</td>
+<td>17</td>
+<td><code>busqueda.best_estimator_</code></td>
+<td>Con <code>refit=True</code>, el Pipeline ganador se reajusta con todo el entrenamiento.</td>
+</tr>
+<tr>
+<td>Seleccionar la familia final</td>
+<td>17</td>
+<td><code>mejor_modelo = mejores_modelos[mejor_nombre]</code></td>
+<td>Se conserva el Pipeline con mayor F1 macro de validación cruzada.</td>
+</tr>
+<tr>
+<td>Predecir comentarios</td>
+<td>18 y 23</td>
+<td><code>modelo.predict(...)</code> y <code>mejor_modelo.predict(...)</code></td>
+<td>Se aplica lo aprendido, sin volver a entrenar.</td>
+</tr>
+</tbody>
+</table>
 <h3 id="Gu%C3%ADa-para-localizar-cada-paso">Guía para localizar cada paso<a class="anchor-link" href="#Gu%C3%ADa-para-localizar-cada-paso">¶</a></h3><table>
 <thead>
 <tr>
@@ -10065,6 +10125,10 @@ weighted avg     0.4078    0.4667    0.4283        75
 <td>Diccionario con cantidades y exclusiones del proceso.</td>
 </tr>
 <tr>
+<td><code>X</code> / <code>y</code> / <code>grupos</code></td>
+<td>Comentarios limpios / etiquetas conocidas / identificadores de artículo para organizar las particiones.</td>
+</tr>
+<tr>
 <td><code>X_train_text</code> / <code>X_test_text</code></td>
 <td>Comentarios limpios de entrenamiento / prueba.</td>
 </tr>
@@ -10073,8 +10137,28 @@ weighted avg     0.4078    0.4667    0.4283        75
 <td>Etiquetas conocidas de entrenamiento / prueba.</td>
 </tr>
 <tr>
+<td><code>grupos_train</code> / <code>grupos_test</code></td>
+<td>Artículos de entrenamiento / prueba; no son entradas predictoras.</td>
+</tr>
+<tr>
 <td><code>X_train</code> / <code>X_test</code></td>
 <td>Matrices TF-IDF didácticas; no son la entrada de GridSearchCV.</td>
+</tr>
+<tr>
+<td><code>modelos</code></td>
+<td>Diccionario con los tres clasificadores configurados antes de entrenar.</td>
+</tr>
+<tr>
+<td><code>pipeline</code></td>
+<td>Secuencia que conecta el vectorizador <code>tfidf</code> con el clasificador <code>modelo</code>.</td>
+</tr>
+<tr>
+<td><code>busqueda</code></td>
+<td>Objeto GridSearchCV que compara hiperparámetros mediante validación cruzada.</td>
+</tr>
+<tr>
+<td><code>puntajes_cv</code></td>
+<td>Mejor F1 macro medio de validación cruzada de cada familia.</td>
 </tr>
 <tr>
 <td><code>mejores_modelos</code> / <code>mejor_modelo</code></td>
@@ -10118,10 +10202,150 @@ weighted avg     0.4078    0.4667    0.4283        75
 </tr>
 </tbody>
 </table>
-<h3 id="C%C3%B3mo-explicar-la-pr%C3%A1ctica">Cómo explicar la práctica<a class="anchor-link" href="#C%C3%B3mo-explicar-la-pr%C3%A1ctica">¶</a></h3><p>Las etiquetas se conocen antes de entrenar: proceden de <code>orientation</code>. El modelo aprende una relación entre los términos del comentario y esas etiquetas. Los identificadores sirven para agrupar y revisar; no revelan el sentimiento al algoritmo.</p>
-<p>Hay tres usos distintos de los datos: <strong>entrenamiento</strong> para aprender; <strong>validación cruzada dentro del entrenamiento</strong> para elegir opciones; y <strong>prueba reservada</strong> para medir el resultado de esa elección. Cada Pipeline aprende su TF-IDF dentro del pliegue correspondiente. Así la prueba y la validación no deciden el vocabulario con el que se entrenan los modelos.</p>
-<p>Para exponer las métricas, use un ejemplo real de las salidas: SVM acierta 35 de 75 comentarios, por lo que Accuracy es 46,67 %. Su F1 macro de prueba es 0,3877. La matriz y el informe por clase muestran que neutral se reconoce peor. Estos resultados explican tanto el funcionamiento como los límites de la práctica; la demostración no garantiza que un comentario nuevo se clasifique correctamente.</p>
-<h3 id="Abrir-la-pr%C3%A1ctica-en-Windows-o-Linux">Abrir la práctica en Windows o Linux<a class="anchor-link" href="#Abrir-la-pr%C3%A1ctica-en-Windows-o-Linux">¶</a></h3><p>El mismo notebook y los mismos scripts se utilizan en <strong>Windows y Linux</strong>. Cada compañero debe crear su propio entorno con <strong>Python 3.12</strong>; no copie la carpeta <code>.venv</code> de otro equipo o sistema operativo. Abra una terminal en la carpeta <code>sentimiento-academico</code>, donde se encuentran este README y <code>requirements-lock.txt</code>.</p>
+<h3 id="Partes-importantes-del-c%C3%B3digo-para-la-exposici%C3%B3n">Partes importantes del código para la exposición<a class="anchor-link" href="#Partes-importantes-del-c%C3%B3digo-para-la-exposici%C3%B3n">¶</a></h3><p>Los fragmentos siguientes seleccionan las líneas relevantes del notebook. Sirven para explicar el desarrollo junto con las celdas completas; deben ejecutarse dentro de su secuencia, porque utilizan variables creadas anteriormente.</p>
+<h4 id="1.-Preparaci%C3%B3n-y-carga-de-los-datos-%E2%80%94-celdas-1-a-6">1. Preparación y carga de los datos — celdas 1 a 6<a class="anchor-link" href="#1.-Preparaci%C3%B3n-y-carga-de-los-datos-%E2%80%94-celdas-1-a-6">¶</a></h4><p>La celda 1 importa bibliotecas y define <code>SEMILLA = 42</code>, <code>N_JOBS = 2</code> y <code>CLASES</code>. <code>SEMILLA</code> permite repetir las particiones con los mismos datos, orden y versiones. <code>N_JOBS</code> limita a dos los trabajos paralelos de la búsqueda. <code>CLASES</code> fija el orden negativo, neutral y positivo en los informes y matrices. <code>RAIZ</code> localiza la carpeta del proyecto mediante <code>Path</code>, y <code>SALIDA</code> identifica <code>resultados/</code>.</p>
+<p>En la celda 2 se leen los datos:</p>
+<div class="highlight"><pre><span></span><span class="n">ruta_dataset</span> <span class="o">=</span> <span class="n">RAIZ</span> <span class="o">/</span> <span class="s2">"data"</span> <span class="o">/</span> <span class="s2">"articulos_es.csv"</span>
+<span class="n">df_original</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_dataset</span><span class="p">,</span> <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+<p><code>ruta_dataset</code> identifica el CSV y <code>pd.read_csv</code> lo convierte en una tabla de pandas. <code>keep_default_na=False</code> conserva los campos vacíos como cadenas, para identificarlos y excluirlos de forma explícita. La tabla inicial contiene 388 evaluaciones en español.</p>
+<p>Antes de leer el CSV, la misma celda ejecuta <code>scripts/descargar_dataset.py</code> mediante <code>subprocess.run</code> y el Python del kernel, <code>sys.executable</code>. El script verifica el original y prepara el CSV. La celda consulta <code>source.json</code>, calcula SHA-256 y compara la huella del CSV con la registrada. Esta comprobación detecta cambios en los bytes del archivo; no evalúa la calidad de las etiquetas.</p>
+<p>Las celdas 3 a 6 comprueban el esquema, conservan las columnas necesarias y retiran textos vacíos y duplicados exactos. <code>df_original</code> conserva la tabla cargada y <code>df</code> contiene la tabla de trabajo. <code>auditoria</code> registra los conteos. Los <code>assert</code> detienen el desarrollo si una condición, como la unicidad de los identificadores, no se cumple.</p>
+<p><strong>Para exponer:</strong> “Primero verificamos la procedencia y cargamos el CSV. Cada fila representa una evaluación. Después excluimos seis comentarios vacíos y conservamos 382 para el análisis”.</p>
+<h4 id="2.-Etiquetas,-limpieza-y-variables-de-entrada-%E2%80%94-celdas-7,-9-y-10">2. Etiquetas, limpieza y variables de entrada — celdas 7, 9 y 10<a class="anchor-link" href="#2.-Etiquetas,-limpieza-y-variables-de-entrada-%E2%80%94-celdas-7,-9-y-10">¶</a></h4><p>La celda 7 define <code>etiquetar_sentimiento()</code> y la aplica a la orientación original:</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"sentimiento"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"orientacion"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">etiquetar_sentimiento</span><span class="p">)</span>
+</pre></div>
+<p><code>apply</code> llama a la función para cada valor de <code>orientacion</code>. La función asigna negativo a −2 y −1, neutral a 0 y positivo a 1 y 2. Estas etiquetas son las respuestas conocidas que permiten el aprendizaje supervisado. Esta asignación no es una predicción del modelo ni una búsqueda de palabras positivas o negativas.</p>
+<p>La celda 9 define la limpieza utilizada tanto para preparar el dataset como para procesar un comentario nuevo:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">limpiar_texto</span><span class="p">(</span><span class="n">texto</span><span class="p">):</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">"NFC"</span><span class="p">,</span> <span class="n">html</span><span class="o">.</span><span class="n">unescape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">texto</span><span class="p">)))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"&lt;[^&gt;]+&gt;"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"https?://\S+|www\.\S+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">isspace</span><span class="p">()</span> <span class="k">else</span> <span class="s2">" "</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</pre></div>
+<p>La primera línea decodifica entidades HTML, unifica la representación Unicode y convierte a minúsculas. Los dos <code>re.sub</code> siguientes retiran etiquetas HTML y URLs. <code>isalpha()</code> conserva letras Unicode, incluidas tildes y ñ; <code>isspace()</code> conserva espacios. Otros caracteres se sustituyen por espacios. La última línea compacta espacios repetidos y retira los de los extremos. La función no elimina palabras por considerarlas frecuentes, por lo que conserva negaciones como “no”.</p>
+<p>La función se aplica con <code>df["texto"].apply(limpiar_texto)</code> para crear <code>texto_limpio</code>. Después se revisan textos que quedaron vacíos y repeticiones normalizadas. La celda 10 separa las funciones de cada columna:</p>
+<div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"texto_limpio"</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"sentimiento"</span><span class="p">]</span>
+<span class="n">grupos</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"articulo_id"</span><span class="p">]</span>
+</pre></div>
+<p><code>X</code> contiene la información que recibirá el clasificador. <code>y</code> contiene lo que debe aprender a predecir. <code>grupos</code> organiza las particiones por artículo; no se concatena con el texto ni se introduce como característica. El orden de las tres series debe mantenerse alineado para que cada comentario corresponda a su etiqueta y artículo.</p>
+<p><strong>Para exponer:</strong> “La orientación original proporciona la respuesta conocida. Limpiamos el comentario sin eliminar las negaciones. El modelo recibe solo texto; los artículos sirven para organizar la separación”.</p>
+<h4 id="3.-Reserva-de-prueba-por-art%C3%ADculo-%E2%80%94-celda-11">3. Reserva de prueba por artículo — celda 11<a class="anchor-link" href="#3.-Reserva-de-prueba-por-art%C3%ADculo-%E2%80%94-celda-11">¶</a></h4><div class="highlight"><pre><span></span><span class="n">separador</span> <span class="o">=</span> <span class="n">StratifiedGroupKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">)</span>
+<span class="n">indices_train</span><span class="p">,</span> <span class="n">indices_test</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">separador</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">grupos</span><span class="p">))</span>
+<span class="n">X_train_text</span><span class="p">,</span> <span class="n">X_test_text</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_train</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_test</span><span class="p">]</span>
+<span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_train</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_test</span><span class="p">]</span>
+<span class="n">grupos_train</span><span class="p">,</span> <span class="n">grupos_test</span> <span class="o">=</span> <span class="n">grupos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_train</span><span class="p">],</span> <span class="n">grupos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_test</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">grupos_train</span><span class="p">)</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">grupos_test</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">X_train_text</span><span class="p">)</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">X_test_text</span><span class="p">)</span>
+</pre></div>
+<p><code>split</code> genera índices de particiones que respetan los grupos y tratan de conservar las proporciones de las clases. <code>next</code> toma la primera división de los cinco pliegues como reserva de prueba. <code>iloc</code> selecciona las filas por posición y aplica los mismos índices a textos, etiquetas y artículos.</p>
+<p>Quedan 307 evaluaciones para entrenamiento y 75 para prueba. <code>isdisjoint</code> comprueba que no haya artículos ni textos iguales compartidos entre ambos conjuntos. La prueba permanece reservada mientras se buscan hiperparámetros; no se utiliza para decidir el vocabulario ni seleccionar el modelo.</p>
+<p><strong>Para exponer:</strong> “Separamos artículos completos. Así comprobamos el resultado sobre evaluaciones de artículos diferentes de los utilizados para entrenar”.</p>
+<h4 id="4.-Conversi%C3%B3n-del-texto-a-n%C3%BAmeros-%E2%80%94-celdas-12-a-14">4. Conversión del texto a números — celdas 12 a 14<a class="anchor-link" href="#4.-Conversi%C3%B3n-del-texto-a-n%C3%BAmeros-%E2%80%94-celdas-12-a-14">¶</a></h4><p>Los clasificadores utilizan características numéricas. La celda 12 configura el vectorizador:</p>
+<div class="highlight"><pre><span></span><span class="n">config_tfidf</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">max_features</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">min_df</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">max_df</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">stop_words</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sublinear_tf</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="o">**</span><span class="n">config_tfidf</span><span class="p">)</span>
+</pre></div>
+<p><code>config_tfidf</code> reúne los parámetros y <code>**config_tfidf</code> los entrega como argumentos al constructor. Crear <code>tfidf</code> todavía no aprende un vocabulario. Las opciones representan palabras y pares de palabras, limitan el vocabulario y conservan negaciones. Los valores y su propósito están detallados en 4.2.</p>
+<p>La celda 13 muestra la diferencia entre aprender y aplicar la transformación:</p>
+<div class="highlight"><pre><span></span><span class="n">tfidf_demostracion</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">tfidf</span><span class="p">)</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">tfidf_demostracion</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train_text</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">tfidf_demostracion</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test_text</span><span class="p">)</span>
+</pre></div>
+<p><code>clone</code> crea un vectorizador independiente con la misma configuración. <code>fit_transform</code> aprende el vocabulario y los pesos IDF con el entrenamiento y obtiene su matriz. <code>transform</code> representa la prueba usando ese vocabulario, sin aprender uno nuevo. Cada fila corresponde a un comentario y cada columna a una característica textual. La celda 14 muestra las dimensiones y algunos términos del vocabulario.</p>
+<p><strong>Estas matrices son didácticas.</strong> La búsqueda de la celda 17 recibe <code>X_train_text</code>, no <code>X_train</code>. Sus Pipelines ajustan vectorizadores independientes dentro de cada pliegue. Utilizar un vocabulario aprendido con todas las filas antes de validar revelaría información de la validación.</p>
+<p><strong>Para exponer:</strong> “TF-IDF transforma palabras y pares de palabras en valores numéricos. Mostramos cómo funciona y, durante la búsqueda, lo aprendemos de nuevo dentro de cada pliegue de entrenamiento”.</p>
+<h4 id="5.-Importaci%C3%B3n-y-creaci%C3%B3n-de-los-tres-modelos-%E2%80%94-celdas-1-y-15">5. Importación y creación de los tres modelos — celdas 1 y 15<a class="anchor-link" href="#5.-Importaci%C3%B3n-y-creaci%C3%B3n-de-los-tres-modelos-%E2%80%94-celdas-1-y-15">¶</a></h4><p>La celda 1 importa las clases de scikit-learn:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultinomialNB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSVC</span>
+</pre></div>
+<p>Importar permite utilizar las implementaciones de los algoritmos. No descarga pesos ni restaura un modelo ya entrenado. La celda 15 crea los candidatos:</p>
+<div class="highlight"><pre><span></span><span class="n">modelos</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"Logistic Regression"</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">),</span>
+    <span class="s2">"Multinomial Naive Bayes"</span><span class="p">:</span> <span class="n">MultinomialNB</span><span class="p">(),</span>
+    <span class="s2">"Linear SVM"</span><span class="p">:</span> <span class="n">LinearSVC</span><span class="p">(</span><span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+<p><code>modelos</code> es un diccionario: cada clave identifica una familia y cada valor es un objeto que conserva su configuración. Regresión logística aprende pesos asociados a las características; Naive Bayes utiliza un modelo probabilístico; SVM aprende fronteras de decisión por margen. En este punto ninguno de los tres candidatos ha visto los comentarios.</p>
+<p><code>class_weight="balanced"</code> ajusta el peso de las clases durante el entrenamiento de regresión logística y SVM. <code>max_iter</code> establece un límite de iteraciones del optimizador; no representa el número de comentarios ni el número de pliegues. <code>dual="auto"</code> permite a LinearSVC elegir la formulación de optimización compatible con los datos y parámetros. Las opciones no garantizan por sí solas un mejor resultado.</p>
+<p><strong>Para exponer:</strong> “Aquí creamos tres candidatos con sus parámetros iniciales. Todavía no están entrenados; aprenderán al ejecutar <code>fit</code> en la búsqueda de la celda 17”.</p>
+<h4 id="6.-Entrenamiento,-b%C3%BAsqueda-y-selecci%C3%B3n-final-%E2%80%94-celdas-16-y-17">6. Entrenamiento, búsqueda y selección final — celdas 16 y 17<a class="anchor-link" href="#6.-Entrenamiento,-b%C3%BAsqueda-y-selecci%C3%B3n-final-%E2%80%94-celdas-16-y-17">¶</a></h4><p>La celda 16 define las configuraciones que se compararán:</p>
+<div class="highlight"><pre><span></span><span class="n">parametros</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"Logistic Regression"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"modelo__C"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
+    <span class="s2">"Multinomial Naive Bayes"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"modelo__alpha"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]},</span>
+    <span class="s2">"Linear SVM"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"modelo__C"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
+<span class="p">}</span>
+</pre></div>
+<p>Los nombres contienen dos guiones bajos: <code>modelo__C</code> significa “cambiar el parámetro <code>C</code> del paso llamado <code>modelo</code>”. <code>C</code> controla inversamente la regularización en regresión logística y SVM. <code>alpha</code> controla el suavizado en Naive Bayes. Esta celda también crea <code>cv</code>, con cinco pliegues agrupados dentro del entrenamiento, y comprueba que no compartan artículos.</p>
+<p>El siguiente fragmento de la celda 17 reúne las operaciones centrales del bucle. Se omiten los registros de tiempos y archivos CSV:</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">modelo</span> <span class="ow">in</span> <span class="n">modelos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s2">"tfidf"</span><span class="p">,</span> <span class="n">clone</span><span class="p">(</span><span class="n">tfidf</span><span class="p">)),</span> <span class="p">(</span><span class="s2">"modelo"</span><span class="p">,</span> <span class="n">clone</span><span class="p">(</span><span class="n">modelo</span><span class="p">))])</span>
+    <span class="n">busqueda</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">pipeline</span><span class="p">,</span> <span class="n">parametros</span><span class="p">[</span><span class="n">nombre</span><span class="p">],</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">"f1_macro"</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="n">N_JOBS</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="n">N_JOBS</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="s2">"raise"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">parallel_backend</span><span class="p">(</span><span class="s2">"threading"</span><span class="p">),</span> <span class="n">threadpool_limits</span><span class="p">(</span><span class="n">limits</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">busqueda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_text</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">grupos_train</span><span class="p">)</span>
+    <span class="n">mejores_modelos</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="n">busqueda</span><span class="o">.</span><span class="n">best_estimator_</span>
+    <span class="n">puntajes_cv</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">busqueda</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+</pre></div>
+<p><code>for</code> recorre las tres familias. <code>Pipeline</code> conecta dos pasos: <code>tfidf</code> representa el texto y <code>modelo</code> aprende a clasificar esa representación. Las copias creadas con <code>clone</code> evitan reutilizar un objeto previamente ajustado. La limpieza ya se realizó antes; no forma parte de este Pipeline.</p>
+<p><strong>El entrenamiento real comienza en <code>busqueda.fit(...)</code>.</strong> <code>X_train_text</code> aporta comentarios, <code>y_train</code> aporta respuestas conocidas y <code>groups=grupos_train</code> organiza los pliegues. Para cada configuración, GridSearchCV aprende TF-IDF y ajusta el clasificador solo con la parte de entrenamiento del pliegue; calcula F1 macro sobre su validación. La parte reservada en <code>X_test_text</code> no interviene. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">Funcionamiento de Pipeline</a>.</p>
+<p><code>scoring="f1_macro"</code> establece qué métrica se busca mejorar. <code>refit=True</code> reajusta el candidato ganador de cada familia con los 307 comentarios de entrenamiento. <code>n_jobs</code> y <code>pre_dispatch</code> limitan los trabajos paralelos; el bloque <code>with</code> controla el backend y los hilos internos. <code>error_score="raise"</code> hace visible un error de ajuste en vez de sustituirlo por una puntuación. Se realizan 45 ajustes de validación —tres familias, tres valores y cinco pliegues— y tres reajustes finales.</p>
+<p><code>best_estimator_</code> devuelve el Pipeline ganador de esa familia, ya ajustado. <code>best_score_</code> devuelve su F1 macro medio de validación cruzada; no contiene el resultado de prueba. Se almacenan en <code>mejores_modelos</code> y <code>puntajes_cv</code>, respectivamente. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">Atributos y reajuste de GridSearchCV</a>.</p>
+<p>Al finalizar el bucle se escoge la familia final:</p>
+<div class="highlight"><pre><span></span><span class="n">mejor_nombre</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">puntajes_cv</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">puntajes_cv</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+<span class="n">mejor_modelo</span> <span class="o">=</span> <span class="n">mejores_modelos</span><span class="p">[</span><span class="n">mejor_nombre</span><span class="p">]</span>
+</pre></div>
+<p><code>max</code> compara los valores de <code>puntajes_cv</code>, utilizando <code>get</code> para consultar el puntaje de cada nombre. <code>mejor_nombre</code> guarda el nombre ganador y <code>mejor_modelo</code> recupera su Pipeline entrenado. En la ejecución guardada se selecciona Linear SVM con <code>C=10</code> y F1 macro CV de 0,5133. La selección se completa antes de examinar la prueba.</p>
+<p><strong>Para exponer:</strong> “Comparamos configuraciones usando validación cruzada dentro del entrenamiento. Cada pliegue aprende su TF-IDF. Luego reajustamos el ganador de cada familia y elegimos el de mayor F1 macro de validación”.</p>
+<h4 id="7.-Predicci%C3%B3n-sobre-prueba-y-c%C3%A1lculo-de-m%C3%A9tricas-%E2%80%94-celdas-18,-19,-21-y-22">7. Predicción sobre prueba y cálculo de métricas — celdas 18, 19, 21 y 22<a class="anchor-link" href="#7.-Predicci%C3%B3n-sobre-prueba-y-c%C3%A1lculo-de-m%C3%A9tricas-%E2%80%94-celdas-18,-19,-21-y-22">¶</a></h4><p>La celda 18 recorre <code>mejores_modelos</code> y utiliza estas líneas dentro del bucle:</p>
+<div class="highlight"><pre><span></span><span class="n">predicho</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_text</span><span class="p">)</span>
+<span class="n">predicciones</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="n">predicho</span>
+<span class="n">resultados</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"Modelo"</span><span class="p">:</span> <span class="n">nombre</span><span class="p">,</span> <span class="o">**</span><span class="n">calcular_metricas</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predicho</span><span class="p">)})</span>
+</pre></div>
+<p><code>predict</code> aplica el TF-IDF ya aprendido y el clasificador ajustado a los 75 comentarios de prueba. <code>predicho</code> contiene las etiquetas estimadas. <code>predicciones</code> conserva las salidas de cada familia para examinarlas después. <code>calcular_metricas</code> compara las etiquetas conocidas <code>y_test</code> con esas predicciones. <code>**</code> incorpora el diccionario de métricas a la fila de resultados.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calcular_metricas</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"Accuracy"</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">),</span>
+        <span class="s2">"Precision_macro"</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">CLASES</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="s2">"Recall_macro"</span><span class="p">:</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">CLASES</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="s2">"F1_macro"</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">CLASES</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="p">}</span>
+</pre></div>
+<p>Accuracy mide aciertos sobre el total. Para una clase, Precision indica qué proporción de las predicciones de esa clase son correctas; Recall indica qué proporción de sus ejemplos reales se recuperan. F1 combina ambas. <code>average="macro"</code> calcula cada métrica por clase y promedia con el mismo peso para las tres. F1 macro promedia los F1 de las clases; no se obtiene combinando Precision macro con Recall macro. <code>zero_division=0</code> asigna cero cuando un cociente queda indefinido. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html">Definición de F1 y promedio macro</a>.</p>
+<p>El <code>DummyClassifier</code> de la misma celda es una referencia que siempre elige la clase mayoritaria. Su <code>fit</code> aprende cuál es esa clase a partir de <code>y_train</code>; no vuelve a entrenar los tres modelos. La celda 19 muestra la comparación, manteniendo la selección realizada por validación cruzada.</p>
+<p>La celda 21 recupera <code>y_pred_final = predicciones[mejor_nombre]</code>. <code>classification_report</code> separa Precision, Recall, F1 y soporte por clase; soporte es la cantidad de ejemplos reales de esa clase. La celda 22 construye <code>confusion_matrix(y_test, y_pred_final, labels=CLASES)</code>. Las filas indican la clase real, las columnas la predicha y la diagonal contiene los aciertos. La matriz normalizada divide cada fila por su soporte para mostrar proporciones.</p>
+<p>Para comprobar la interpretación con la salida guardada, SVM acierta 35 de 75 comentarios: Accuracy es 46,67 %. Su F1 macro de prueba es 0,3877. Recupera solo 1 de los 21 neutrales. El informe y la matriz permiten explicar este comportamiento además de presentar una cifra global.</p>
+<p><strong>Para exponer:</strong> “Evaluamos los modelos sobre datos reservados. Accuracy muestra el acierto global; F1 macro y el informe por clase permiten observar el rendimiento de las tres clases por separado”.</p>
+<h4 id="8.-Registro-de-resultados-y-estado-del-modelo-%E2%80%94-celda-20">8. Registro de resultados y estado del modelo — celda 20<a class="anchor-link" href="#8.-Registro-de-resultados-y-estado-del-modelo-%E2%80%94-celda-20">¶</a></h4><p>La celda 20 crea <code>resumen</code> con la fuente, huellas, versiones, semilla, partición, configuración y métricas, y lo escribe en JSON:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">SALIDA</span> <span class="o">/</span> <span class="s2">"metricas.json"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">resumen</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</pre></div>
+<p><code>json.dumps</code> convierte el diccionario en texto. <code>indent=2</code> facilita su lectura y <code>ensure_ascii=False</code> conserva los caracteres españoles. <code>write_text</code> guarda ese texto en <code>resultados/metricas.json</code> con codificación UTF-8. Otros bloques guardan tablas con <code>to_csv</code> y figuras con <code>savefig</code>.</p>
+<p><strong>Estos archivos documentan el experimento; no almacenan el objeto <code>mejor_modelo</code>.</strong> El notebook guarda código y salidas, pero el Pipeline entrenado permanece en la memoria del kernel durante la sesión. El proyecto no utiliza <code>joblib.dump</code>, <code>joblib.load</code> ni un archivo de pesos para restaurarlo. Reiniciar o cerrar el kernel elimina las variables: hay que ejecutar de nuevo las celdas en orden para reconstruir el modelo, aunque todavía se vean las salidas guardadas.</p>
+<p><strong>Para exponer:</strong> “Guardamos evidencias para revisar el experimento. El modelo entrenado sigue en la memoria de Jupyter y se reutiliza mientras esa sesión permanezca activa”.</p>
+<h4 id="9.-Demostraci%C3%B3n-de-la-pr%C3%A1ctica-con-un-comentario-nuevo-%E2%80%94-celda-23">9. Demostración de la práctica con un comentario nuevo — celda 23<a class="anchor-link" href="#9.-Demostraci%C3%B3n-de-la-pr%C3%A1ctica-con-un-comentario-nuevo-%E2%80%94-celda-23">¶</a></h4><p>La celda 23 comprueba primero que existan <code>pd</code>, <code>limpiar_texto</code> y <code>mejor_modelo</code>. Si faltan, muestra un mensaje que indica ejecutar las celdas desde el inicio. Después define la función de predicción:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">predecir_sentimiento</span><span class="p">(</span><span class="n">texto</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">texto</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Escriba una evaluación no vacía en español."</span><span class="p">)</span>
+    <span class="n">texto_limpio</span> <span class="o">=</span> <span class="n">limpiar_texto</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span>
+    <span class="n">vector</span> <span class="o">=</span> <span class="n">mejor_modelo</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s2">"tfidf"</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">texto_limpio</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">texto_limpio</span> <span class="ow">or</span> <span class="n">vector</span><span class="o">.</span><span class="n">nnz</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"El comentario no contiene términos conocidos por el modelo."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">mejor_modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span><span class="n">texto_limpio</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+<p><code>isinstance</code> comprueba que la entrada sea una cadena y <code>strip</code> permite detectar texto vacío. <code>limpiar_texto</code> aplica la misma preparación utilizada para los comentarios del dataset. <code>named_steps["tfidf"]</code> accede al vectorizador entrenado dentro del Pipeline. Su <code>transform</code> representa el comentario con el vocabulario existente. <code>vector.nnz</code> cuenta las posiciones con valor distinto de cero; si es cero, ninguna característica conocida representa esa entrada.</p>
+<p>En <code>predict([texto_limpio])</code>, los corchetes forman una colección con un solo comentario, que es el formato esperado. El Pipeline aplica de nuevo su transformación y después el clasificador, sin ajustar sus parámetros. <code>[0]</code> extrae la primera y única etiqueta; <code>str</code> la entrega como texto. La transformación anterior se utiliza para comprobar el vocabulario, mientras que <code>predict</code> realiza la clasificación completa. Este control no detecta automáticamente el idioma ni garantiza un acierto.</p>
+<p>Para la exposición, cambie únicamente el contenido de <code>mi_evaluacion</code> y ejecute esa celda con el kernel entrenado:</p>
+<div class="highlight"><pre><span></span><span class="n">mi_evaluacion</span> <span class="o">=</span> <span class="s2">"El artículo no explica la metodología y sus conclusiones no están justificadas."</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sentimiento predicho:"</span><span class="p">,</span> <span class="n">predecir_sentimiento</span><span class="p">(</span><span class="n">mi_evaluacion</span><span class="p">))</span>
+</pre></div>
+<p>Los ejemplos escritos en la demo no forman parte del conjunto de prueba. La predicción representa el sentimiento estimado del comentario; no determina la aceptación ni la calidad científica del artículo.</p>
+<p><strong>Para exponer:</strong> “Limpiamos el comentario nuevo con la misma función, comprobamos que tenga términos conocidos y utilizamos el Pipeline seleccionado. Esta celda predice sin volver a entrenar”.</p>
+<h3 id="Abrir-la-pr%C3%A1ctica-en-Windows-o-Linux">Abrir la práctica en Windows o Linux<a class="anchor-link" href="#Abrir-la-pr%C3%A1ctica-en-Windows-o-Linux">¶</a></h3><p>El mismo notebook y los mismos scripts se utilizan en <strong>Windows y Linux</strong>. Cada compañero debe crear su propio entorno con <strong>Python 3.12</strong>; no copie la carpeta <code>.venv</code> de otro equipo o sistema operativo. Abra una terminal en la carpeta <code>sentimiento-academico</code>, donde se encuentran <code>README.md</code> y <code>requirements-lock.txt</code>.</p>
 <p><strong>Preparación en Windows (PowerShell).</strong> Con Python 3.12 instalado y disponible mediante el lanzador <code>py</code>, ejecute:</p>
 <div class="highlight"><pre><span></span><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
 <span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="n">requirements-lock</span><span class="p">.</span><span class="n">txt</span>
@@ -10179,6 +10403,7 @@ sh<span class="w"> </span>abrir_notebook.sh
 <p>La lista <code>ejemplos</code> contiene tres frases redactadas para demostrar la función. La comprensión <code>[predecir_sentimiento(t) for t in ejemplos]</code> clasifica cada una y el DataFrame muestra sus salidas. No son el conjunto de prueba ni tienen etiquetas de evaluación asignadas en esta celda.</p>
 <p><strong>Para probar:</strong> cambie únicamente el texto entre comillas de <code>mi_evaluacion</code>, debajo de <code>CAMBIA ÚNICAMENTE EL TEXTO ENTRE COMILLAS</code>. Pulse <strong>Shift + Enter</strong> con esta celda seleccionada, después de ejecutar el notebook completo. Los <code>print</code> muestran su texto y el sentimiento predicho. No se vuelve a entrenar y no se muestra una probabilidad de confianza.</p>
 <p><strong>Interpretación:</strong> la etiqueta describe una predicción del tono del comentario. Puede equivocarse. Una predicción positiva no equivale a recomendar la aceptación del artículo.</p>
+<p><strong>Para exponer:</strong> “Limpiamos el comentario nuevo con la misma función, comprobamos que tenga términos conocidos y utilizamos el Pipeline seleccionado. Esta celda predice sin volver a entrenar”.</p>
 </div>
 </div>
 </div>
