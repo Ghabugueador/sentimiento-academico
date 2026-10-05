@@ -12,7 +12,7 @@ cd "$RAIZ_PROYECTO"
 PYTHON_PROYECTO="$RAIZ_PROYECTO/.venv/bin/python"
 if [ ! -x "$PYTHON_PROYECTO" ]; then
     printf '%s\n' \
-        'Primero cree el entorno Python siguiendo README.md, apartado 4.5.' \
+        'Primero cree el entorno Python 3.12 con estos comandos:' \
         'python3.12 -m venv .venv' \
         '.venv/bin/python -m pip install -r requirements-lock.txt'
     exit 1

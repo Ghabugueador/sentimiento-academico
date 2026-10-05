@@ -7802,10 +7802,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="4.-Metodolog%C3%ADa-y-desarrollo">4. Metodología y desarrollo<a class="anchor-link" href="#4.-Metodolog%C3%ADa-y-desarrollo">¶</a></h1><p><strong>Clasificación del sentimiento en evaluaciones de artículos científicos en español.</strong> Se compara aprendizaje supervisado con TF-IDF y tres algoritmos. La práctica predice el tono del comentario; no determina la calidad científica ni la aceptación del artículo.</p>
-<p>Ejecute <strong>Restart Kernel and Run All Cells</strong> la primera vez. Para la demo posterior, modifique únicamente mi_evaluacion en la celda 23.</p>
-<p><strong>Ejecución observada:</strong> 382 comentarios españoles; 307 de entrenamiento y 75 de prueba, con artículos separados. Linear SVM se seleccionó por F1 macro CV. En prueba obtuvo Accuracy 46.67% y F1 macro 0.3877. El reconocimiento de neutrales es limitado; revise el informe por clase y los errores.</p>
-<h2 id="4.1-Dataset-y-etiquetado">4.1 Dataset y etiquetado<a class="anchor-link" href="#4.1-Dataset-y-etiquetado">¶</a></h2><p>Se utiliza <a href="https://archive.ics.uci.edu/dataset/410/paper+reviews">Paper Reviews, UCI</a>, Brian Keith (2017), DOI <a href="https://doi.org/10.24432/C50G60">10.24432/C50G60</a>. El corpus contiene 405 evaluaciones, mayoritariamente en español. La derivación española conserva el campo text y la orientación anotada, con atribución y licencia CC BY 4.0. Consulte data/README.md y data/ATTRIBUTION.md.</p>
+<h1 id="Clasificaci%C3%B3n-del-sentimiento-en-evaluaciones-de-art%C3%ADculos-cient%C3%ADficos-en-espa%C3%B1ol">Clasificación del sentimiento en evaluaciones de artículos científicos en español<a class="anchor-link" href="#Clasificaci%C3%B3n-del-sentimiento-en-evaluaciones-de-art%C3%ADculos-cient%C3%ADficos-en-espa%C3%B1ol">¶</a></h1><h2 id="4.-Metodolog%C3%ADa-y-desarrollo">4. Metodología y desarrollo<a class="anchor-link" href="#4.-Metodolog%C3%ADa-y-desarrollo">¶</a></h2><h3 id="4.1-Dataset-y-etiquetado">4.1 Dataset y etiquetado<a class="anchor-link" href="#4.1-Dataset-y-etiquetado">¶</a></h3>
 </div>
 </div>
 </div>
@@ -7816,17 +7813,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-1.-Configurar-el-entorno">Celda 1. Configurar el entorno<a class="anchor-link" href="#Celda-1.-Configurar-el-entorno">¶</a></h3><p><strong>Objetivo:</strong> preparar las herramientas, las rutas y las opciones que utilizarán las demás celdas. Esta celda todavía no carga datos ni entrena modelos.</p>
-<ul>
-<li>Los <code>import</code> permiten usar librerías ya instaladas. <code>pandas</code> (<code>pd</code>) maneja tablas; <code>numpy</code> (<code>np</code>) realiza operaciones numéricas; <code>matplotlib.pyplot</code> (<code>plt</code>) dibuja gráficos. Las herramientas de <code>sklearn</code> permiten dividir datos, convertir texto en números, entrenar y evaluar.</li>
-<li><code>Path</code> maneja rutas; <code>json</code> lee y guarda metadatos; <code>hashlib</code> calcula huellas de archivos. <code>re</code>, <code>html</code> y <code>unicodedata</code> se usarán para limpiar texto. <code>time</code> mide duración y <code>datetime</code> registra la fecha de ejecución.</li>
-<li><code>SEMILLA = 42</code> fija la referencia aleatoria para repetir las particiones con los mismos datos y versiones. No es una puntuación del modelo. <code>N_JOBS = 2</code> permite hasta dos trabajos paralelos en la búsqueda.</li>
-<li><code>CLASES</code> fija el orden <strong>negativo, neutral, positivo</strong> en las tablas y matrices.</li>
-<li><code>RAIZ</code> busca la carpeta del proyecto comprobando que existe <code>scripts/descargar_dataset.py</code>. <code>SALIDA</code> apunta a <code>resultados/</code>; <code>mkdir(exist_ok=True)</code> crea esa carpeta si falta.</li>
-<li><code>versiones</code> registra las versiones instaladas. <code>plt.rcParams.update(...)</code> configura el tamaño y la apariencia de los gráficos; <code>pd.set_option(...)</code> limita cuánto texto muestra una tabla.</li>
-</ul>
-<p><strong>Salida:</strong> las versiones de las librerías. Si aparece <code>FileNotFoundError</code>, abra Jupyter desde la carpeta del proyecto o desde <code>notebooks/</code>.</p>
-<p><strong>Ubicación de los modelos:</strong> esta celda importa las clases de scikit-learn. Los candidatos se crean en la celda 15 y se entrenan en la 17; no se carga un modelo previamente entrenado desde un archivo.</p>
+<h4 id="Celda-1.-Configurar-el-entorno">Celda 1. Configurar el entorno<a class="anchor-link" href="#Celda-1.-Configurar-el-entorno">¶</a></h4>
 </div>
 </div>
 </div>
@@ -7910,16 +7897,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-2.-Cargar-el-dataset-espa%C3%B1ol">Celda 2. Cargar el dataset español<a class="anchor-link" href="#Celda-2.-Cargar-el-dataset-espa%C3%B1ol">¶</a></h3><p><strong>Objetivo:</strong> obtener una tabla verificable de evaluaciones académicas en español a partir del archivo original de UCI.</p>
-<ol>
-<li><code>ruta_dataset</code> identifica <code>data/articulos_es.csv</code>. <code>subprocess.run(...)</code> ejecuta el script de preparación con <code>sys.executable</code>, el mismo Python que usa este notebook. El script verifica el JSON original y reconstruye el CSV; descarga el original únicamente si falta.</li>
-<li><code>check=True</code> detiene la ejecución si el script falla. <code>capture_output=True</code> recoge sus mensajes y <code>encoding="utf-8"</code> permite leer correctamente tildes y ñ.</li>
-<li><code>json.loads(...)</code> carga <code>source.json</code>, que registra la procedencia. SHA-256 calcula una huella del CSV y <code>assert</code> comprueba que coincide con la registrada. Esta comprobación detecta cambios en el archivo; no demuestra por sí sola que sus etiquetas sean correctas.</li>
-<li><code>pd.read_csv(..., keep_default_na=False)</code> carga el CSV como una tabla llamada <code>df_original</code>. Conserva cadenas vacías para contarlas antes de excluirlas. Otra comprobación exige que todos los registros tengan <code>idioma = "es"</code>.</li>
-<li><code>auditoria</code> empieza a registrar los conteos del proceso. <code>head(5)</code> muestra solo cinco filas; <code>str.len()</code> añade su longitud en caracteres a la vista.</li>
-</ol>
-<p><strong>Salida:</strong> 388 evaluaciones en español de las 405 originales. Todavía se incluyen seis comentarios vacíos. Los 17 comentarios en inglés no se traducen ni se utilizan.</p>
-<p><strong>Para exponer:</strong> “Primero verificamos la procedencia y cargamos el CSV. Cada fila representa una evaluación. Después excluimos seis comentarios vacíos y conservamos 382 para el análisis”.</p>
+<h4 id="Celda-2.-Cargar-el-dataset-espa%C3%B1ol">Celda 2. Cargar el dataset español<a class="anchor-link" href="#Celda-2.-Cargar-el-dataset-espa%C3%B1ol">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8054,15 +8032,7 @@ Evaluaciones en español: 388
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-3.-Revisar-el-esquema">Celda 3. Revisar el esquema<a class="anchor-link" href="#Celda-3.-Revisar-el-esquema">¶</a></h3><p><strong>Objetivo:</strong> comprobar que la tabla tiene las columnas y los identificadores necesarios antes de modificarla.</p>
-<ul>
-<li>Un <strong>DataFrame</strong> es una tabla de filas y columnas. Aquí cada fila representa una evaluación escrita sobre un artículo; un artículo puede recibir varias evaluaciones.</li>
-<li><code>issubset(df_original)</code> exige las columnas <code>articulo_id</code>, <code>evaluacion_id</code>, <code>texto</code>, <code>orientacion</code> e <code>idioma</code>. Un <code>assert</code> detiene la ejecución si la condición no se cumple.</li>
-<li><code>duplicated(["articulo_id", "evaluacion_id"])</code> busca pares de identificadores repetidos. <code>any()</code> pregunta si existe al menos uno y <code>not</code> exige que no exista ninguno.</li>
-<li><code>evaluacion_id</code> identifica una evaluación dentro de su artículo. Por eso se verifica junto con <code>articulo_id</code>, no como identificador global independiente.</li>
-<li><code>dtypes</code> muestra el tipo de cada columna. <code>rename("tipo").to_frame()</code> presenta esos tipos como una tabla legible.</li>
-</ul>
-<p><strong>Salida:</strong> la tabla de tipos. Esta revisión ayuda a detectar un archivo con una estructura distinta a la esperada.</p>
+<h4 id="Celda-3.-Revisar-el-esquema">Celda 3. Revisar el esquema<a class="anchor-link" href="#Celda-3.-Revisar-el-esquema">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8162,36 +8132,7 @@ Evaluaciones en español: 388
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-4.-Elegir-texto,-etiqueta-y-grupo">Celda 4. Elegir texto, etiqueta y grupo<a class="anchor-link" href="#Celda-4.-Elegir-texto,-etiqueta-y-grupo">¶</a></h3><p><strong>Objetivo:</strong> separar la información que el modelo debe aprender de la información usada para etiquetar y organizar los datos.</p>
-<table>
-<thead>
-<tr>
-<th>Columna conservada</th>
-<th>Uso en la práctica</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>texto</code></td>
-<td>Única entrada del clasificador; procede de <code>text</code> en el original.</td>
-</tr>
-<tr>
-<td><code>orientacion</code></td>
-<td>Genera la respuesta esperada; procede de <code>orientation</code>.</td>
-</tr>
-<tr>
-<td><code>articulo_id</code></td>
-<td>Mantiene juntas las evaluaciones del mismo artículo al dividir los datos.</td>
-</tr>
-<tr>
-<td><code>evaluacion_id</code></td>
-<td>Permite localizar y revisar una evaluación concreta.</td>
-</tr>
-</tbody>
-</table>
-<p><code>df_original[[...]].copy()</code> crea la tabla de trabajo <code>df</code> con esas cuatro columnas. <code>.copy()</code> permite modificarla sin alterar la tabla original.</p>
-<p><strong>Por qué importa:</strong> entregar la orientación al modelo como entrada revelaría la respuesta que debe predecir. <code>evaluation</code> es la valoración del revisor y puede diferir del sentimiento anotado. Tampoco se usan la decisión editorial, la confianza ni <code>remarks</code> como características.</p>
-<p><strong>Salida:</strong> una vista de los identificadores y la orientación. El objetivo es clasificar el sentimiento del comentario, no decidir si el artículo debe aceptarse.</p>
+<h4 id="Celda-4.-Elegir-texto,-etiqueta-y-grupo">Celda 4. Elegir texto, etiqueta y grupo<a class="anchor-link" href="#Celda-4.-Elegir-texto,-etiqueta-y-grupo">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8298,15 +8239,7 @@ evaluation, decisión editorial, confianza y remarks no se usan.
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-5.-Excluir-comentarios-vac%C3%ADos">Celda 5. Excluir comentarios vacíos<a class="anchor-link" href="#Celda-5.-Excluir-comentarios-vac%C3%ADos">¶</a></h3><p><strong>Objetivo:</strong> conservar evaluaciones que tengan texto y una orientación válida.</p>
-<ol>
-<li><code>isna().any(axis=1).sum()</code> cuenta filas con algún valor nulo y registra el resultado en <code>auditoria</code>. Un valor nulo representa información ausente; una cadena vacía puede existir sin ser nula.</li>
-<li><code>dropna(subset=[...])</code> excluye filas sin texto, orientación o identificador de artículo.</li>
-<li><code>str.strip().eq("")</code> detecta textos vacíos, incluso si solo tienen espacios. La variable <code>vacios</code> contiene un valor verdadero o falso para cada fila.</li>
-<li><code>df.loc[~vacios]</code> conserva las filas que no están vacías. <code>~</code> invierte esa selección.</li>
-<li><code>pd.to_numeric(..., errors="raise").astype(int)</code> convierte la orientación a enteros y falla si encuentra un valor no convertible. <code>isin([-2, -1, 0, 1, 2])</code> comprueba su dominio permitido.</li>
-</ol>
-<p><strong>Salida:</strong> seis textos vacíos excluidos y 382 evaluaciones no vacías. Los conteos quedan registrados para justificar el tamaño final del conjunto.</p>
+<h4 id="Celda-5.-Excluir-comentarios-vac%C3%ADos">Celda 5. Excluir comentarios vacíos<a class="anchor-link" href="#Celda-5.-Excluir-comentarios-vac%C3%ADos">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8354,10 +8287,7 @@ Evaluaciones no vacías: 382
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-6.-Revisar-duplicados">Celda 6. Revisar duplicados<a class="anchor-link" href="#Celda-6.-Revisar-duplicados">¶</a></h3><p><strong>Objetivo:</strong> evitar que copias idénticas del mismo texto con la misma orientación se cuenten como observaciones diferentes.</p>
-<p><code>duplicated(["texto", "orientacion"]).sum()</code> cuenta las repeticiones del par. <code>drop_duplicates(...)</code> conserva la primera aparición de cada par. <code>reset_index(drop=True)</code> renumera las filas sin añadir una columna con el índice anterior.</p>
-<p>Esta revisión exige que coincidan tanto el texto original como la orientación. Diferencias de mayúsculas o puntuación pueden ocultar repeticiones; por eso la celda 9 revisa otra vez el texto después de limpiarlo. También comprueba allí si un mismo texto limpio tiene etiquetas contradictorias.</p>
-<p><strong>Salida:</strong> cero duplicados de este tipo en los datos utilizados y 382 evaluaciones conservadas. El código mantiene la comprobación aunque en esta ejecución no retire ninguna fila.</p>
+<h4 id="Celda-6.-Revisar-duplicados">Celda 6. Revisar duplicados<a class="anchor-link" href="#Celda-6.-Revisar-duplicados">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8401,32 +8331,7 @@ Evaluaciones conservadas: 382
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-7.-Construir-las-tres-etiquetas">Celda 7. Construir las tres etiquetas<a class="anchor-link" href="#Celda-7.-Construir-las-tres-etiquetas">¶</a></h3><p><strong>Objetivo:</strong> convertir cinco niveles de orientación en las tres clases que aprenderá el clasificador.</p>
-<table>
-<thead>
-<tr>
-<th>Orientación original</th>
-<th>Etiqueta creada</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>−2 o −1</td>
-<td><code>negativo</code></td>
-</tr>
-<tr>
-<td>0</td>
-<td><code>neutral</code></td>
-</tr>
-<tr>
-<td>1 o 2</td>
-<td><code>positivo</code></td>
-</tr>
-</tbody>
-</table>
-<p><code>def etiquetar_sentimiento(orientacion):</code> define una función. Los bloques <code>if</code> revisan el valor recibido y <code>return</code> devuelve su etiqueta. <code>raise ValueError(...)</code> detiene el proceso si llega un valor fuera del dominio permitido.</p>
-<p><code>apply(etiquetar_sentimiento)</code> aplica la función a cada orientación y crea la columna <code>sentimiento</code>. Un <code>assert</code> comprueba que están presentes las tres clases. <code>pd.crosstab(...)</code> cruza orientación y sentimiento para comprobar visualmente el mapeo; <code>reindex(columns=CLASES)</code> ordena las columnas.</p>
-<p><strong>Interpretación:</strong> las etiquetas proceden de la anotación original, no de buscar palabras positivas o negativas. Agrupar los niveles pierde información sobre intensidad; un comentario mixto puede haber sido anotado como neutral.</p>
+<h4 id="Celda-7.-Construir-las-tres-etiquetas">Celda 7. Construir las tres etiquetas<a class="anchor-link" href="#Celda-7.-Construir-las-tres-etiquetas">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8536,15 +8441,7 @@ Evaluaciones conservadas: 382
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-8.-Mostrar-la-distribuci%C3%B3n">Celda 8. Mostrar la distribución<a class="anchor-link" href="#Celda-8.-Mostrar-la-distribuci%C3%B3n">¶</a></h3><p><strong>Objetivo:</strong> conocer cuántas evaluaciones hay de cada sentimiento antes de entrenar.</p>
-<ul>
-<li><code>value_counts()</code> cuenta las etiquetas. <code>reindex(CLASES)</code> mantiene el mismo orden en todas las salidas.</li>
-<li><code>distribucion</code> reúne los conteos y sus porcentajes. Cada porcentaje se calcula como <strong>conteo de la clase / número total de evaluaciones × 100</strong>. <code>round(2)</code> redondea solo la presentación.</li>
-<li><code>to_csv(...)</code> guarda la tabla. <code>barh(...)</code> crea barras horizontales; <code>bar_label(...)</code> añade cantidades y porcentajes. <code>savefig(...)</code> guarda el gráfico y <code>plt.show()</code> lo muestra en el notebook.</li>
-<li><code>display(Markdown(...))</code> presenta una interpretación calculada desde los datos.</li>
-</ul>
-<p><strong>Salida:</strong> 172 negativos, 104 neutrales y 106 positivos. Los negativos son la clase más frecuente. Una Accuracy aceptable puede ocultar errores en otras clases; por eso después se revisan F1 macro y métricas por clase.</p>
-<p><strong>Archivos:</strong> <code>distribucion_4_1.csv</code> y <code>distribucion_clases.png</code> en <code>resultados/</code>.</p>
+<h4 id="Celda-8.-Mostrar-la-distribuci%C3%B3n">Celda 8. Mostrar la distribución<a class="anchor-link" href="#Celda-8.-Mostrar-la-distribuci%C3%B3n">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8667,7 +8564,7 @@ Name: count, dtype: int64
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="4.2-Limpieza-y-vectorizaci%C3%B3n">4.2 Limpieza y vectorización<a class="anchor-link" href="#4.2-Limpieza-y-vectorizaci%C3%B3n">¶</a></h2><p>El mismo preprocesamiento se usa para entrenamiento y para nuevos comentarios. El vectorizador se ajusta después de la partición y dentro de cada Pipeline de validación.</p>
+<h3 id="4.2-Limpieza-y-vectorizaci%C3%B3n">4.2 Limpieza y vectorización<a class="anchor-link" href="#4.2-Limpieza-y-vectorizaci%C3%B3n">¶</a></h3>
 </div>
 </div>
 </div>
@@ -8678,19 +8575,7 @@ Name: count, dtype: int64
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-9.-Limpiar-el-texto-espa%C3%B1ol">Celda 9. Limpiar el texto español<a class="anchor-link" href="#Celda-9.-Limpiar-el-texto-espa%C3%B1ol">¶</a></h3><p><strong>Objetivo:</strong> representar de forma consistente los comentarios sin borrar las tildes, la ñ ni las negaciones.</p>
-<p>La función <code>limpiar_texto(texto)</code> realiza estos pasos en orden:</p>
-<ol>
-<li><code>str(texto)</code> convierte la entrada a texto. <code>html.unescape(...)</code> convierte entidades HTML en caracteres; por ejemplo, <code>&amp;amp;</code> pasa a <code>&amp;</code>.</li>
-<li><code>unicodedata.normalize("NFC", ...)</code> unifica representaciones Unicode equivalentes de letras acentuadas. <code>.lower()</code> convierte las mayúsculas a minúsculas.</li>
-<li><code>re.sub(...)</code> sustituye etiquetas HTML y enlaces por espacios. Las expresiones regulares describen los patrones que se eliminan.</li>
-<li><code>isalpha()</code> conserva letras, incluidas ñ y vocales acentuadas. <code>isspace()</code> conserva espacios. Los demás caracteres se sustituyen por espacios: se retiran números y puntuación.</li>
-<li>La última expresión regular reduce espacios repetidos a uno y <code>.strip()</code> retira los de los extremos. <code>return</code> entrega el texto limpio.</li>
-</ol>
-<p><code>apply(limpiar_texto)</code> crea <code>texto_limpio</code>. Después se excluyen textos que quedaron vacíos y se cuentan repeticiones y etiquetas contradictorias. <code>groupby(...).nunique().gt(1)</code> detecta si un mismo texto limpio tiene más de una etiqueta. La eliminación de duplicados conserva la primera aparición; en esta ejecución no hay conflictos ni duplicados normalizados, y permanecen 382 evaluaciones.</p>
-<p>Los <code>assert</code> comprueban ejemplos concretos y que <code>no</code> no desaparezca. La tabla usa frases redactadas para mostrar el antes y el después; esas frases no se añaden al entrenamiento.</p>
-<p><strong>Límite:</strong> la limpieza pierde cifras y puntuación, que también pueden expresar significado. No se aplica stemming ni lematización. TF-IDF se configura después de separar los datos.</p>
-<p><strong>Para exponer:</strong> “La orientación original proporciona la respuesta conocida. Limpiamos el comentario sin eliminar las negaciones. El modelo recibe solo texto; los artículos sirven para organizar la separación”.</p>
+<h4 id="Celda-9.-Limpiar-el-texto-espa%C3%B1ol">Celda 9. Limpiar el texto español<a class="anchor-link" href="#Celda-9.-Limpiar-el-texto-espa%C3%B1ol">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8813,7 +8698,7 @@ Name: count, dtype: int64
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="4.3-Partici%C3%B3n">4.3 Partición<a class="anchor-link" href="#4.3-Partici%C3%B3n">¶</a></h2><p>Se evalúa el reconocimiento de sentimiento en comentarios de <strong>artículos que no participaron en el entrenamiento</strong>. La separación agrupada reduce el riesgo de compartir vocabulario específico del mismo artículo entre conjuntos.</p>
+<h3 id="4.3-Partici%C3%B3n">4.3 Partición<a class="anchor-link" href="#4.3-Partici%C3%B3n">¶</a></h3>
 </div>
 </div>
 </div>
@@ -8824,36 +8709,7 @@ Name: count, dtype: int64
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-10.-Definir-entradas,-etiquetas-y-grupos">Celda 10. Definir entradas, etiquetas y grupos<a class="anchor-link" href="#Celda-10.-Definir-entradas,-etiquetas-y-grupos">¶</a></h3><p><strong>Objetivo:</strong> preparar tres variables alineadas para dividir y entrenar.</p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Contenido</th>
-<th>Función</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>X</code></td>
-<td>Columna <code>texto_limpio</code></td>
-<td>Comentarios que recibe el clasificador.</td>
-</tr>
-<tr>
-<td><code>y</code></td>
-<td>Columna <code>sentimiento</code></td>
-<td>Etiquetas conocidas con las que aprende y se evalúa.</td>
-</tr>
-<tr>
-<td><code>grupos</code></td>
-<td>Columna <code>articulo_id</code></td>
-<td>Impide repartir un mismo artículo entre conjuntos.</td>
-</tr>
-</tbody>
-</table>
-<p>Cada variable es una <strong>Series</strong> de pandas: una columna con un índice que identifica sus filas. Las tres proceden de <code>df</code>, por lo que cada texto sigue asociado a su etiqueta y artículo.</p>
-<p><code>len(X)</code> cuenta evaluaciones; <code>grupos.nunique()</code> cuenta artículos distintos. Son cantidades diferentes porque un artículo puede tener varias evaluaciones.</p>
-<p><strong>Salida:</strong> 382 evaluaciones de 168 artículos. Los identificadores organizan la separación; no se convierten en características del clasificador.</p>
+<h4 id="Celda-10.-Definir-entradas,-etiquetas-y-grupos">Celda 10. Definir entradas, etiquetas y grupos<a class="anchor-link" href="#Celda-10.-Definir-entradas,-etiquetas-y-grupos">¶</a></h4>
 </div>
 </div>
 </div>
@@ -8895,14 +8751,7 @@ Name: count, dtype: int64
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-11.-Separar-por-art%C3%ADculo">Celda 11. Separar por artículo<a class="anchor-link" href="#Celda-11.-Separar-por-art%C3%ADculo">¶</a></h3><p><strong>Objetivo:</strong> reservar una prueba con artículos que no aparezcan durante el entrenamiento.</p>
-<p><code>StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=SEMILLA)</code> organiza cinco pliegues. Mantiene juntas las filas del mismo artículo e intenta conservar las proporciones de las clases, hasta donde lo permite esa agrupación. <code>shuffle=True</code> y la semilla hacen reproducible la aleatoriedad utilizada por el separador.</p>
-<p><code>split(X, y, groups=grupos)</code> produce pares de posiciones de entrenamiento y evaluación. <code>next(...)</code> toma siempre el <strong>primer</strong> par: aproximadamente cuatro quintas partes para entrenamiento y una quinta parte para prueba. No se prueba cada pliegue para quedarse con el de mejores métricas.</p>
-<p><code>.iloc[indices_train]</code> y <code>.iloc[indices_test]</code> seleccionan las filas por posición. Se aplican los mismos índices al texto, las etiquetas y los grupos para mantener su correspondencia.</p>
-<p>Los <code>assert</code> comprueban que no hay artículos ni textos limpios compartidos, que ninguna fila se pierde y que ambos conjuntos contienen las tres clases. La tabla presenta sus conteos.</p>
-<p><strong>Salida:</strong> 307 evaluaciones de 132 artículos para entrenamiento y 75 evaluaciones de 36 artículos para prueba. La proporción no tiene que ser exactamente 80/20 porque los artículos no se dividen.</p>
-<p><strong>Archivos:</strong> <code>particion.csv</code> resume los conteos; <code>indices_particion.csv</code> permite localizar el conjunto asignado a cada evaluación. La prueba queda reservada mientras se eligen modelo e hiperparámetros.</p>
-<p><strong>Para exponer:</strong> “Separamos artículos completos. Así comprobamos el resultado sobre evaluaciones de artículos diferentes de los utilizados para entrenar”.</p>
+<h4 id="Celda-11.-Separar-por-art%C3%ADculo">Celda 11. Separar por artículo<a class="anchor-link" href="#Celda-11.-Separar-por-art%C3%ADculo">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9014,49 +8863,24 @@ Prueba: 75 evaluaciones; 36 artículos
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e954c508">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Vectorizaci%C3%B3n-TF-IDF">Vectorización TF-IDF<a class="anchor-link" href="#Vectorizaci%C3%B3n-TF-IDF">¶</a></h3>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c0671238">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-12.-Configurar-TF-IDF">Celda 12. Configurar TF-IDF<a class="anchor-link" href="#Celda-12.-Configurar-TF-IDF">¶</a></h3><p><strong>Objetivo:</strong> definir cómo se convertirá cada comentario en características numéricas.</p>
-<p>TF-IDF combina la frecuencia de un término dentro de un comentario con su frecuencia en el conjunto de entrenamiento. Los términos frecuentes en muchos comentarios reciben menos peso relativo por su componente IDF. Cada comentario se convierte en una fila de números, con una columna por término del vocabulario.</p>
-<table>
-<thead>
-<tr>
-<th>Parámetro</th>
-<th>Significado en este código</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>max_features=5000</code></td>
-<td>Limita el vocabulario a 5.000 términos seleccionados por frecuencia entre los que pasan los filtros. No son 5.000 comentarios.</td>
-</tr>
-<tr>
-<td><code>ngram_range=(1, 2)</code></td>
-<td>Incluye palabras individuales y pares de palabras consecutivas, como <code>aporta</code> y <code>no aporta</code>.</td>
-</tr>
-<tr>
-<td><code>min_df=2</code></td>
-<td>Descarta términos presentes en menos de dos comentarios de entrenamiento.</td>
-</tr>
-<tr>
-<td><code>max_df=0.95</code></td>
-<td>Descarta términos presentes en más del 95 % de los comentarios de entrenamiento.</td>
-</tr>
-<tr>
-<td><code>stop_words=None</code></td>
-<td>No aplica una lista adicional de palabras excluidas; permite conservar negaciones.</td>
-</tr>
-<tr>
-<td><code>sublinear_tf=True</code></td>
-<td>Suaviza las repeticiones mediante <code>1 + log(frecuencia)</code>.</td>
-</tr>
-</tbody>
-</table>
-<p><code>config_tfidf</code> es un diccionario de opciones. <code>TfidfVectorizer(**config_tfidf)</code> las pasa al constructor mediante <code>**</code>. Aquí solo se crea <code>tfidf</code>; todavía no aprende un vocabulario. Los filtros pueden excluir palabras poco frecuentes aunque no se use una lista de stop words.</p>
+<h4 id="Celda-12.-Configurar-TF-IDF">Celda 12. Configurar TF-IDF<a class="anchor-link" href="#Celda-12.-Configurar-TF-IDF">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9084,15 +8908,7 @@ Prueba: 75 evaluaciones; 36 artículos
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-13.-Demostrar-la-transformaci%C3%B3n">Celda 13. Demostrar la transformación<a class="anchor-link" href="#Celda-13.-Demostrar-la-transformaci%C3%B3n">¶</a></h3><p><strong>Objetivo:</strong> mostrar la diferencia entre aprender una representación y utilizar una representación ya aprendida.</p>
-<ul>
-<li><code>clone(tfidf)</code> crea <code>tfidf_demostracion</code> con las mismas opciones, sin aprendizaje previo.</li>
-<li><code>fit_transform(X_train_text)</code> aprende el vocabulario y los pesos IDF usando solo entrenamiento, y transforma esos comentarios en la matriz numérica <code>X_train</code>.</li>
-<li><code>transform(X_test_text)</code> convierte la prueba en <code>X_test</code> utilizando el mismo vocabulario y los mismos pesos. No aprende de la prueba; los términos desconocidos no crean columnas nuevas.</li>
-</ul>
-<p><strong>Por qué importa:</strong> aprender TF-IDF antes de separar los datos dejaría que la prueba influyera en la representación. Durante la validación cruzada también debe evitarse esa influencia de cada pliegue de validación.</p>
-<p><strong>Alcance:</strong> estas matrices son didácticas. La búsqueda de la celda 17 recibe texto limpio y aprende su propio TF-IDF dentro de cada <code>Pipeline</code>. No utiliza <code>X_train</code> ni <code>X_test</code> de esta demostración. Esta celda no muestra una tabla; la siguiente inspecciona las matrices.</p>
-<p><strong>Para exponer:</strong> “TF-IDF transforma palabras y pares de palabras en valores numéricos. Mostramos cómo funciona y, durante la búsqueda, lo aprendemos de nuevo dentro de cada pliegue de entrenamiento”.</p>
+<h4 id="Celda-13.-Transformar-los-textos-con-TF-IDF">Celda 13. Transformar los textos con TF-IDF<a class="anchor-link" href="#Celda-13.-Transformar-los-textos-con-TF-IDF">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9120,11 +8936,7 @@ Prueba: 75 evaluaciones; 36 artículos
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-14.-Inspeccionar-las-matrices">Celda 14. Inspeccionar las matrices<a class="anchor-link" href="#Celda-14.-Inspeccionar-las-matrices">¶</a></h3><p><strong>Objetivo:</strong> comprobar que la representación numérica es compatible con los algoritmos.</p>
-<p><code>shape</code> devuelve <strong>(número de filas, número de columnas)</strong>. En las salidas guardadas, <code>X_train.shape</code> es <code>(307, 5000)</code> y <code>X_test.shape</code> es <code>(75, 5000)</code>: hay una fila por evaluación y una columna por término. Ambas matrices comparten las mismas columnas y su significado.</p>
-<p>Una <strong>matriz dispersa</strong> almacena principalmente sus valores distintos de cero. Esto ahorra memoria porque cada comentario solo contiene una parte del vocabulario.</p>
-<p><code>get_feature_names_out()[:15]</code> muestra los primeros 15 términos del vocabulario, no los 15 más importantes para predecir. Los <code>assert</code> comprueban el mismo número de columnas, el límite de 5.000 características y valores no negativos, requisito de <code>MultinomialNB</code>. También comprueban que <code>no</code> quedó en el vocabulario didáctico.</p>
-<p><strong>Interpretación:</strong> un cero significa que ese término no aporta peso en ese comentario. Los pesos TF-IDF no son probabilidades de sentimiento.</p>
+<h4 id="Celda-14.-Inspeccionar-las-matrices">Celda 14. Inspeccionar las matrices<a class="anchor-link" href="#Celda-14.-Inspeccionar-las-matrices">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9168,7 +8980,7 @@ Primeros términos: ['abc', 'abejas', 'abierta', 'abierta la', 'abiertas', 'abie
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="4.4-Modelos-e-hiperpar%C3%A1metros">4.4 Modelos e hiperparámetros<a class="anchor-link" href="#4.4-Modelos-e-hiperpar%C3%A1metros">¶</a></h2><p>Logistic Regression: class_weight=balanced, max_iter=2000, C ∈ {0.1, 1, 10}. MultinomialNB: alpha ∈ {0.1, 0.5, 1}. LinearSVC: class_weight=balanced, max_iter=10000, dual=auto, C ∈ {0.1, 1, 10}. La selección utiliza exclusivamente F1 macro de validación cruzada.</p>
+<h3 id="4.4-Modelos-e-hiperpar%C3%A1metros">4.4 Modelos e hiperparámetros<a class="anchor-link" href="#4.4-Modelos-e-hiperpar%C3%A1metros">¶</a></h3>
 </div>
 </div>
 </div>
@@ -9179,33 +8991,7 @@ Primeros términos: ['abc', 'abejas', 'abierta', 'abierta la', 'abiertas', 'abie
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-15.-Definir-los-modelos">Celda 15. Definir los modelos<a class="anchor-link" href="#Celda-15.-Definir-los-modelos">¶</a></h3><p><strong>Objetivo:</strong> crear tres algoritmos supervisados que aprenderán la relación entre características TF-IDF y etiquetas.</p>
-<table>
-<thead>
-<tr>
-<th>Modelo</th>
-<th>Cómo utiliza el texto vectorizado</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>LogisticRegression</code></td>
-<td>Aprende pesos para las características y modela probabilidades de clase. A pesar de su nombre, aquí resuelve clasificación.</td>
-</tr>
-<tr>
-<td><code>MultinomialNB</code></td>
-<td>Estima evidencias de clase a partir de características no negativas y supone independencia condicional entre ellas.</td>
-</tr>
-<tr>
-<td><code>LinearSVC</code></td>
-<td>Aprende fronteras lineales mediante un criterio de margen. En este problema multiclase utiliza una clase frente al resto.</td>
-</tr>
-</tbody>
-</table>
-<p><code>modelos</code> es un diccionario: sus claves son los nombres que aparecerán en los resultados y sus valores son los objetos de los algoritmos. Crearlos no equivale a entrenarlos; el ajuste ocurre en la celda 17.</p>
-<p><code>class_weight="balanced"</code> en regresión logística y SVM aumenta el peso relativo de las clases menos frecuentes durante el ajuste. No crea comentarios ni cambia el reparto de prueba. <code>max_iter</code> establece el máximo de iteraciones del optimizador. <code>random_state</code> fija la semilla donde el algoritmo utiliza aleatoriedad; <code>dual="auto"</code> permite a SVM elegir la formulación de optimización según el problema.</p>
-<p><strong>Salida:</strong> los tres modelos quedan disponibles en memoria para compararlos con la misma partición y representación.</p>
-<p><strong>Para exponer:</strong> “Aquí creamos tres candidatos con sus parámetros iniciales. Todavía no están entrenados; aprenderán al ejecutar <code>fit</code> en la búsqueda de la celda 17”.</p>
+<h4 id="Celda-15.-Crear-los-modelos">Celda 15. Crear los modelos<a class="anchor-link" href="#Celda-15.-Crear-los-modelos">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9235,16 +9021,7 @@ Primeros términos: ['abc', 'abejas', 'abierta', 'abierta la', 'abiertas', 'abie
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-16.-Configurar-la-validaci%C3%B3n-por-art%C3%ADculo">Celda 16. Configurar la validación por artículo<a class="anchor-link" href="#Celda-16.-Configurar-la-validaci%C3%B3n-por-art%C3%ADculo">¶</a></h3><p><strong>Objetivo:</strong> definir las opciones que se compararán sin utilizar la prueba reservada.</p>
-<p>Un <strong>hiperparámetro</strong> es una opción del algoritmo que se fija antes de entrenar. <code>parametros</code> contiene tres valores de <code>C</code> para regresión y SVM, y tres de <code>alpha</code> para Naive Bayes:</p>
-<ul>
-<li><code>C</code> se prueba con <code>0.1</code>, <code>1</code> y <code>10</code>. Es inverso a la intensidad de regularización: un valor menor impone mayor regularización de los pesos.</li>
-<li><code>alpha</code> se prueba con <code>0.1</code>, <code>0.5</code> y <code>1.0</code>. Controla el suavizado de Naive Bayes, que evita que la ausencia de una característica en una clase produzca una probabilidad estimada nula.</li>
-<li>En <code>modelo__C</code> y <code>modelo__alpha</code>, <code>modelo</code> identifica el paso del <code>Pipeline</code>; el doble guion bajo permite configurar una opción de ese paso.</li>
-</ul>
-<p>La <strong>validación cruzada</strong> interna divide únicamente las 307 evaluaciones de entrenamiento en cinco pliegues. Cada configuración aprende con cuatro y se evalúa con el restante; el proceso rota hasta usar los cinco como validación. Estos pliegues internos son distintos de la prueba de 75 evaluaciones.</p>
-<p>El bucle <code>for</code> enumera los pliegues y comprueba que no comparten artículos y que incluyen las tres clases. <code>filas_pliegues</code> reúne sus tamaños.</p>
-<p><strong>Salida:</strong> la tabla de los cinco pliegues, también guardada en <code>pliegues_cv.csv</code>. La agrupación puede producir tamaños diferentes.</p>
+<h4 id="Celda-16.-Configurar-hiperpar%C3%A1metros-y-validaci%C3%B3n">Celda 16. Configurar hiperparámetros y validación<a class="anchor-link" href="#Celda-16.-Configurar-hiperpar%C3%A1metros-y-validaci%C3%B3n">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9358,22 +9135,7 @@ Primeros términos: ['abc', 'abejas', 'abierta', 'abierta la', 'abiertas', 'abie
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-17.-Buscar-hiperpar%C3%A1metros-y-seleccionar">Celda 17. Buscar hiperparámetros y seleccionar<a class="anchor-link" href="#Celda-17.-Buscar-hiperpar%C3%A1metros-y-seleccionar">¶</a></h3><p><strong>Objetivo:</strong> ajustar las configuraciones y elegir un modelo mediante F1 macro de validación cruzada.</p>
-<p>Para cada algoritmo, el código crea <code>Pipeline([("tfidf", ...), ("modelo", ...)])</code>. Un <code>Pipeline</code> encadena la vectorización y la clasificación. En cada pliegue aprende TF-IDF con la parte usada para entrenar y utiliza esa representación para evaluar la parte de validación. <code>clone(...)</code> crea componentes sin aprendizaje previo.</p>
-<p><code>GridSearchCV</code> organiza la búsqueda con estas opciones:</p>
-<ul>
-<li><code>scoring="f1_macro"</code>: compara la media del F1 de las tres clases.</li>
-<li><code>cv=cv</code> y <code>groups=grupos_train</code>: aplican los cinco pliegues agrupados de entrenamiento.</li>
-<li><code>refit=True</code>: después de comparar configuraciones, reajusta la mejor de cada algoritmo usando las 307 evaluaciones de entrenamiento.</li>
-<li><code>n_jobs=N_JOBS</code> y <code>pre_dispatch=N_JOBS</code>: limitan los trabajos paralelos. <code>parallel_backend("threading")</code> usa hilos; <code>threadpool_limits(limits=1)</code> limita la paralelización adicional de librerías numéricas.</li>
-<li><code>error_score="raise"</code>: hace visible un fallo de entrenamiento en lugar de ocultarlo con una puntuación sustitutiva.</li>
-</ul>
-<p>Se comparan <strong>3 algoritmos × 3 configuraciones × 5 pliegues = 45 ajustes de validación</strong>, además de tres reajustes finales. Por eso esta celda puede tardar más y mantener ocupado el kernel.</p>
-<p><strong>Línea que inicia el entrenamiento:</strong> <code>busqueda.fit(X_train_text, y_train, groups=grupos_train)</code>. Recibe textos y etiquetas de entrenamiento; los grupos organizan los pliegues y no se utilizan como características predictoras.</p>
-<p><code>best_params_</code> guarda la configuración ganadora de cada familia. <code>best_score_</code> contiene su F1 macro medio de validación cruzada, no su F1 de prueba. <code>best_estimator_</code> recupera el Pipeline ganador, ya reajustado sobre todo el entrenamiento porque <code>refit=True</code>. <code>mejores_modelos</code> conserva esos tres Pipelines.</p>
-<p><code>mejor_nombre = max(puntajes_cv, key=puntajes_cv.get)</code> selecciona el nombre con mayor puntuación de CV. <code>mejor_modelo = mejores_modelos[mejor_nombre]</code> recupera su Pipeline entrenado. La prueba permanece reservada hasta la celda 18.</p>
-<p><strong>Salida guardada:</strong> Linear SVM con <code>C=10</code> y F1 macro CV de 0,5133. Regresión logística obtiene 0,5123: la diferencia es pequeña. <code>Desviacion_CV</code> mide la dispersión entre pliegues; no es un intervalo de confianza. <code>Segundos</code> mide duración. Los CSV de búsqueda y <code>seleccion_cv.csv</code> permiten revisar la selección, realizada antes de consultar la prueba.</p>
-<p><strong>Para exponer:</strong> “Comparamos configuraciones usando validación cruzada dentro del entrenamiento. Cada pliegue aprende su TF-IDF. Luego reajustamos el ganador de cada familia y elegimos el de mayor F1 macro de validación”.</p>
+<h4 id="Celda-17.-Entrenar-y-seleccionar-el-modelo">Celda 17. Entrenar y seleccionar el modelo<a class="anchor-link" href="#Celda-17.-Entrenar-y-seleccionar-el-modelo">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9508,38 +9270,7 @@ Linear SVM | {'modelo__C': 10} | F1 macro CV: 0.5133
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-18.-Evaluar-la-reserva-de-prueba">Celda 18. Evaluar la reserva de prueba<a class="anchor-link" href="#Celda-18.-Evaluar-la-reserva-de-prueba">¶</a></h3><p><strong>Objetivo:</strong> medir las predicciones de los modelos ya ajustados sobre los 75 comentarios reservados.</p>
-<p><code>calcular_metricas(real, predicho)</code> recibe las etiquetas conocidas y las predicciones. Para cada clase, se considera esa clase frente a las otras dos: <strong>VP</strong> son aciertos de esa clase; <strong>FP</strong>, comentarios de otras clases predichos como ella; <strong>FN</strong>, comentarios de ella predichos como otra.</p>
-<table>
-<thead>
-<tr>
-<th>Métrica</th>
-<th>Cálculo y pregunta que responde</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Accuracy</td>
-<td>Aciertos / total. ¿Qué proporción de comentarios se clasificó correctamente?</td>
-</tr>
-<tr>
-<td>Precision de una clase</td>
-<td>VP / (VP + FP). De los comentarios predichos como esa clase, ¿cuántos lo eran?</td>
-</tr>
-<tr>
-<td>Recall de una clase</td>
-<td>VP / (VP + FN). De los comentarios que realmente eran de esa clase, ¿cuántos se recuperaron?</td>
-</tr>
-<tr>
-<td>F1 de una clase</td>
-<td><code>2 × Precision × Recall / (Precision + Recall)</code>. Combina ambas medidas.</td>
-</tr>
-</tbody>
-</table>
-<p><code>average="macro"</code> calcula cada métrica por clase y luego promedia las tres con el mismo peso. <strong>F1 macro es la media de los F1 por clase</strong>, no el F1 calculado a partir de Precision macro y Recall macro. <code>labels=CLASES</code> fija las clases evaluadas; <code>zero_division=0</code> asigna cero cuando el cociente no puede calcularse.</p>
-<p>El bucle ejecuta <code>.predict(X_test_text)</code> y guarda las salidas en <code>predicciones</code>. También ajusta <code>DummyClassifier(strategy="most_frequent")</code> solo con las etiquetas de entrenamiento: predice siempre negativo. Sus entradas de ceros son auxiliares; esta referencia no lee los textos.</p>
-<p><strong>Salida:</strong> <code>resultados_df</code>, guardada en <code>metricas_prueba.csv</code>. Las puntuaciones van de 0 a 1; por ejemplo, 0,4667 corresponde al 46,67 %. <code>Seleccionado_por_CV</code> identifica la elección ya realizada, sin volver a decidir desde la prueba.</p>
-<p><strong>Para exponer:</strong> “Evaluamos los modelos sobre datos reservados. Accuracy muestra el acierto global; F1 macro y el informe por clase permiten observar el rendimiento de las tres clases por separado”.</p>
+<h4 id="Celda-18.-Calcular-las-m%C3%A9tricas-de-prueba">Celda 18. Calcular las métricas de prueba<a class="anchor-link" href="#Celda-18.-Calcular-las-m%C3%A9tricas-de-prueba">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9586,11 +9317,7 @@ Linear SVM | {'modelo__C': 10} | F1 macro CV: 0.5133
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-19.-Comparar-las-m%C3%A9tricas">Celda 19. Comparar las métricas<a class="anchor-link" href="#Celda-19.-Comparar-las-m%C3%A9tricas">¶</a></h3><p><strong>Objetivo:</strong> mostrar una comparación que pueda leerse e interpretarse.</p>
-<p><code>display(resultados_df.round(4))</code> presenta la tabla con Accuracy, Precision macro, Recall macro, F1 macro y el indicador de selección. Redondea la vista a cuatro decimales; no modifica los valores calculados.</p>
-<p><code>set_index("Modelo")</code> utiliza los nombres como etiquetas. El gráfico selecciona solo Accuracy y F1 macro para facilitar la comparación; Precision y Recall siguen disponibles en la tabla. <code>plot.barh(...)</code> dibuja las barras, <code>bar_label(...)</code> escribe sus valores y <code>set_xlabel(...)</code> identifica la escala de 0 a 1. <code>savefig(...)</code> guarda <code>comparacion_modelos.png</code>.</p>
-<p><strong>Cómo interpretar la ejecución guardada:</strong> regresión logística obtiene Accuracy 0,5867 y F1 macro 0,5119 en prueba. SVM, seleccionado antes mediante CV, obtiene 0,4667 y 0,3877. La referencia mayoritaria obtiene Accuracy 0,4400 y F1 macro 0,2037.</p>
-<p>Estos valores describen esta partición. La tabla no cambia la selección previa de SVM; usar ahora la prueba para elegir otro candidato convertiría la prueba en parte del proceso de selección.</p>
+<h4 id="Celda-19.-Comparar-las-m%C3%A9tricas">Celda 19. Comparar las métricas<a class="anchor-link" href="#Celda-19.-Comparar-las-m%C3%A9tricas">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9711,12 +9438,7 @@ Linear SVM | {'modelo__C': 10} | F1 macro CV: 0.5133
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-20.-Guardar-la-evidencia">Celda 20. Guardar la evidencia<a class="anchor-link" href="#Celda-20.-Guardar-la-evidencia">¶</a></h3><p><strong>Objetivo:</strong> registrar qué datos, opciones y resultados produjo el experimento.</p>
-<p>El primer <code>assert</code> comprueba que <code>mejor_nombre</code> todavía coincide con el mayor F1 macro de CV. <code>set_index("Modelo").loc[mejor_nombre]</code> localiza las métricas de prueba de ese modelo y las guarda en <code>metricas_final</code>.</p>
-<p>El diccionario <code>resumen</code> reúne la fecha de ejecución en UTC, huellas de los archivos, versiones, semilla, exclusiones, idioma, fuente, predictor, etiqueta, agrupación, tamaños de conjuntos, configuración TF-IDF y resultados. La fecha describe cuándo se ejecutó el código; no es la fecha de los comentarios.</p>
-<p><code>json.dumps(..., indent=2, ensure_ascii=False)</code> convierte el diccionario en texto JSON legible y conserva los caracteres españoles. <code>write_text(..., encoding="utf-8")</code> lo escribe en <code>resultados/metricas.json</code>. <code>display(Markdown(...))</code> presenta las métricas principales usando los valores calculados.</p>
-<p><strong>Salida:</strong> un registro reproducible del experimento y un resumen del modelo seleccionado. El JSON guarda metadatos y resultados; <strong>no guarda el modelo entrenado</strong>. Al reiniciar el kernel, se deben ejecutar de nuevo las celdas de entrenamiento para utilizar la demostración.</p>
-<p><strong>Para exponer:</strong> “Guardamos evidencias para revisar el experimento. El modelo entrenado sigue en la memoria de Jupyter y se reutiliza mientras esa sesión permanezca activa”.</p>
+<h4 id="Celda-20.-Guardar-los-resultados">Celda 20. Guardar los resultados<a class="anchor-link" href="#Celda-20.-Guardar-los-resultados">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9785,15 +9507,7 @@ F1 macro prueba: 0.3877
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-21.-Examinar-el-desempe%C3%B1o-por-clase">Celda 21. Examinar el desempeño por clase<a class="anchor-link" href="#Celda-21.-Examinar-el-desempe%C3%B1o-por-clase">¶</a></h3><p><strong>Objetivo:</strong> detectar errores que los promedios globales pueden ocultar.</p>
-<p><code>y_pred_final = predicciones[mejor_nombre]</code> recupera las predicciones de SVM ya calculadas. <code>classification_report(...)</code> las compara con <code>y_test</code> y muestra Precision, Recall, F1 y <code>support</code> para cada clase.</p>
-<ul>
-<li><code>support</code> cuenta comentarios <strong>reales</strong> de cada clase en prueba: 33 negativos, 21 neutrales y 21 positivos. No cuenta cuántas veces predijo el modelo esa clase.</li>
-<li><code>macro avg</code> asigna igual peso a las tres clases. <code>weighted avg</code> pondera por sus cantidades reales, por lo que las clases más frecuentes pesan más.</li>
-<li><code>digits=4</code> controla los decimales mostrados; <code>output_dict=True</code> permite guardar el informe como datos en <code>reporte_clasificacion.csv</code>.</li>
-</ul>
-<p><code>predicciones_df</code> conserva el índice de cada fila, su clase real y su predicción. <code>.merge(...)</code> añade <code>articulo_id</code> y <code>evaluacion_id</code> para localizar errores; <code>.to_numpy()</code> utiliza los valores en el orden de la prueba. La tabla se guarda en <code>predicciones_prueba.csv</code>.</p>
-<p><strong>Interpretación guardada:</strong> neutral tiene F1 0,0606; se recupera solo 1 de sus 21 comentarios. El modelo distingue peor esa clase en esta prueba. <code>min(...)</code> identifica la clase de menor F1, pero el resultado no demuestra por sí solo la causa de sus errores.</p>
+<h4 id="Celda-21.-Mostrar-m%C3%A9tricas-por-clase">Celda 21. Mostrar métricas por clase<a class="anchor-link" href="#Celda-21.-Mostrar-m%C3%A9tricas-por-clase">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9858,13 +9572,7 @@ weighted avg     0.4078    0.4667    0.4283        75
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-22.-Examinar-la-matriz-de-confusi%C3%B3n">Celda 22. Examinar la matriz de confusión<a class="anchor-link" href="#Celda-22.-Examinar-la-matriz-de-confusi%C3%B3n">¶</a></h3><p><strong>Objetivo:</strong> ver qué clases se confunden y comprobar la coherencia con Accuracy.</p>
-<p><code>confusion_matrix(..., labels=CLASES)</code> crea una tabla en el orden negativo, neutral y positivo. <strong>Las filas son clases reales y las columnas son clases predichas.</strong> La diagonal contiene aciertos; las demás posiciones contienen errores.</p>
-<p>En la matriz guardada, la fila neutral es <strong>[13, 1, 7]</strong>: de 21 neutrales reales, 13 se predicen negativos, 1 neutral y 7 positivos. La diagonal completa suma <strong>25 + 1 + 9 = 35</strong> aciertos; <code>35 / 75 = 0,4667</code>, consistente con Accuracy.</p>
-<p>Los <code>assert</code> comprueban que la matriz reúne todas las evaluaciones y que <code>np.trace(matriz) / matriz.sum()</code> coincide con Accuracy. <code>trace</code> suma la diagonal; <code>np.isclose(...)</code> compara decimales con tolerancia numérica.</p>
-<p>El bucle dibuja dos vistas: conteos absolutos y proporciones por clase real. <code>normalize="true"</code> divide cada fila por su total; la diagonal normalizada corresponde al Recall de cada clase. Por ejemplo, <code>1 / 21 ≈ 0,0476</code> es el Recall neutral.</p>
-<p>Finalmente, una copia de la matriz pone la diagonal a cero mediante <code>fill_diagonal(...)</code>. <code>argmax()</code> y <code>unravel_index(...)</code> localizan el error más frecuente: 13 neutrales predichos negativos. Compare también proporciones, porque los tamaños de las clases difieren.</p>
-<p><strong>Archivos:</strong> <code>matriz_confusion.png</code> y <code>matriz_confusion.csv</code>.</p>
+<h4 id="Celda-22.-Mostrar-la-matriz-de-confusi%C3%B3n">Celda 22. Mostrar la matriz de confusión<a class="anchor-link" href="#Celda-22.-Mostrar-la-matriz-de-confusi%C3%B3n">¶</a></h4>
 </div>
 </div>
 </div>
@@ -9932,454 +9640,7 @@ weighted avg     0.4078    0.4667    0.4283        75
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="4.5-Explicaci%C3%B3n-del-c%C3%B3digo">4.5 Explicación del código<a class="anchor-link" href="#4.5-Explicaci%C3%B3n-del-c%C3%B3digo">¶</a></h2><p>El desarrollo sigue un recorrido: cargar y comprobar los datos, crear las etiquetas, limpiar el texto, separar los artículos, aprender la representación numérica, ajustar los modelos, evaluar y clasificar un comentario nuevo. <strong>Cada una de las 23 celdas de código tiene una explicación inmediatamente encima</strong>, con su objetivo, operaciones y lectura de las salidas. La numeración cuenta celdas de código, no bloques de texto ni el número de ejecuciones que Jupyter muestra entre corchetes.</p>
-<p>Para localizar rápidamente la parte de los modelos, distinga estos momentos. <strong>El proyecto entrena sus modelos con el dataset; no carga un modelo previamente entrenado desde un archivo.</strong></p>
-<table>
-<thead>
-<tr>
-<th>Momento</th>
-<th>Celda</th>
-<th>Operación principal</th>
-<th>Estado del modelo</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Importar las clases</td>
-<td>1</td>
-<td><code>from sklearn... import ...</code></td>
-<td>Las herramientas quedan disponibles para utilizarlas.</td>
-</tr>
-<tr>
-<td>Crear los candidatos</td>
-<td>15</td>
-<td><code>LogisticRegression(...)</code>, <code>MultinomialNB()</code> y <code>LinearSVC(...)</code></td>
-<td>Son objetos configurados, todavía sin entrenar.</td>
-</tr>
-<tr>
-<td>Entrenar y comparar configuraciones</td>
-<td>17</td>
-<td><code>busqueda.fit(X_train_text, y_train, groups=grupos_train)</code></td>
-<td>Cada candidato aprende dentro de los pliegues de entrenamiento.</td>
-</tr>
-<tr>
-<td>Recuperar el candidato ajustado de cada familia</td>
-<td>17</td>
-<td><code>busqueda.best_estimator_</code></td>
-<td>Con <code>refit=True</code>, el Pipeline ganador se reajusta con todo el entrenamiento.</td>
-</tr>
-<tr>
-<td>Seleccionar la familia final</td>
-<td>17</td>
-<td><code>mejor_modelo = mejores_modelos[mejor_nombre]</code></td>
-<td>Se conserva el Pipeline con mayor F1 macro de validación cruzada.</td>
-</tr>
-<tr>
-<td>Predecir comentarios</td>
-<td>18 y 23</td>
-<td><code>modelo.predict(...)</code> y <code>mejor_modelo.predict(...)</code></td>
-<td>Se aplica lo aprendido, sin volver a entrenar.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Gu%C3%ADa-para-localizar-cada-paso">Guía para localizar cada paso<a class="anchor-link" href="#Gu%C3%ADa-para-localizar-cada-paso">¶</a></h3><table>
-<thead>
-<tr>
-<th>Celda</th>
-<th>Qué hace</th>
-<th>Qué revisar</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Importa herramientas y configura rutas, semilla y gráficos.</td>
-<td>Versiones y carpeta del proyecto.</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Verifica el origen y carga el CSV español.</td>
-<td>388 evaluaciones, incluidas las vacías.</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Comprueba columnas, tipos e identificadores.</td>
-<td>Una fila por evaluación; varios comentarios por artículo.</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Conserva texto, orientación e identificadores.</td>
-<td>Solo el texto entra al clasificador.</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Excluye textos vacíos y valida la orientación.</td>
-<td>Seis exclusiones; quedan 382 evaluaciones.</td>
-</tr>
-<tr>
-<td>6</td>
-<td>Revisa duplicados exactos de texto y orientación.</td>
-<td>Conteo de repeticiones.</td>
-</tr>
-<tr>
-<td>7</td>
-<td>Convierte orientación en negativo, neutral o positivo.</td>
-<td>Tabla de correspondencia de las etiquetas.</td>
-</tr>
-<tr>
-<td>8</td>
-<td>Cuenta y dibuja la distribución de clases.</td>
-<td>172 negativos, 104 neutrales y 106 positivos.</td>
-</tr>
-<tr>
-<td>9</td>
-<td>Limpia español y revisa textos equivalentes.</td>
-<td>Negaciones conservadas; exclusiones y conflictos registrados.</td>
-</tr>
-<tr>
-<td>10</td>
-<td>Define <code>X</code>, <code>y</code> y <code>grupos</code>.</td>
-<td>Texto, respuesta esperada y artículo alineados.</td>
-</tr>
-<tr>
-<td>11</td>
-<td>Separa entrenamiento y prueba por artículo.</td>
-<td>307 y 75 evaluaciones; artículos sin solapamiento.</td>
-</tr>
-<tr>
-<td>12</td>
-<td>Configura palabras, bigramas y filtros TF-IDF.</td>
-<td>Qué significa cada opción del vectorizador.</td>
-</tr>
-<tr>
-<td>13</td>
-<td>Demuestra <code>fit_transform</code> y <code>transform</code>.</td>
-<td>Aprende solo con entrenamiento.</td>
-</tr>
-<tr>
-<td>14</td>
-<td>Inspecciona la representación numérica.</td>
-<td>Filas, columnas, valores no negativos y vocabulario.</td>
-</tr>
-<tr>
-<td>15</td>
-<td>Crea regresión logística, Naive Bayes y SVM.</td>
-<td>Cómo aprende cada algoritmo y sus opciones fijas.</td>
-</tr>
-<tr>
-<td>16</td>
-<td>Define hiperparámetros y cinco pliegues internos.</td>
-<td>Validación agrupada dentro de entrenamiento.</td>
-</tr>
-<tr>
-<td>17</td>
-<td>Busca configuraciones y selecciona mediante CV.</td>
-<td>SVM, <code>C=10</code>, F1 macro CV 0,5133.</td>
-</tr>
-<tr>
-<td>18</td>
-<td>Calcula métricas de prueba y la referencia mayoritaria.</td>
-<td>Accuracy, Precision macro, Recall macro y F1 macro.</td>
-</tr>
-<tr>
-<td>19</td>
-<td>Muestra la comparación en tabla y gráfico.</td>
-<td>Métricas de prueba sin cambiar la selección previa.</td>
-</tr>
-<tr>
-<td>20</td>
-<td>Guarda el registro del experimento.</td>
-<td><code>metricas.json</code>; no contiene el modelo entrenado.</td>
-</tr>
-<tr>
-<td>21</td>
-<td>Examina Precision, Recall, F1 y soporte por clase.</td>
-<td>Neutral: F1 0,0606 y 1 de 21 recuperados.</td>
-</tr>
-<tr>
-<td>22</td>
-<td>Muestra conteos y proporciones de los errores.</td>
-<td>Filas reales, columnas predichas y diagonal de aciertos.</td>
-</tr>
-<tr>
-<td>23</td>
-<td>Predice el sentimiento de <code>mi_evaluacion</code>.</td>
-<td>Demostración de la práctica con el modelo ya entrenado.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Variables-y-operaciones-que-conviene-reconocer">Variables y operaciones que conviene reconocer<a class="anchor-link" href="#Variables-y-operaciones-que-conviene-reconocer">¶</a></h3><table>
-<thead>
-<tr>
-<th>Nombre u operación</th>
-<th>Significado</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>df_original</code> / <code>df</code></td>
-<td>Tabla cargada / tabla de trabajo que se prepara para modelar.</td>
-</tr>
-<tr>
-<td><code>auditoria</code></td>
-<td>Diccionario con cantidades y exclusiones del proceso.</td>
-</tr>
-<tr>
-<td><code>X</code> / <code>y</code> / <code>grupos</code></td>
-<td>Comentarios limpios / etiquetas conocidas / identificadores de artículo para organizar las particiones.</td>
-</tr>
-<tr>
-<td><code>X_train_text</code> / <code>X_test_text</code></td>
-<td>Comentarios limpios de entrenamiento / prueba.</td>
-</tr>
-<tr>
-<td><code>y_train</code> / <code>y_test</code></td>
-<td>Etiquetas conocidas de entrenamiento / prueba.</td>
-</tr>
-<tr>
-<td><code>grupos_train</code> / <code>grupos_test</code></td>
-<td>Artículos de entrenamiento / prueba; no son entradas predictoras.</td>
-</tr>
-<tr>
-<td><code>X_train</code> / <code>X_test</code></td>
-<td>Matrices TF-IDF didácticas; no son la entrada de GridSearchCV.</td>
-</tr>
-<tr>
-<td><code>modelos</code></td>
-<td>Diccionario con los tres clasificadores configurados antes de entrenar.</td>
-</tr>
-<tr>
-<td><code>pipeline</code></td>
-<td>Secuencia que conecta el vectorizador <code>tfidf</code> con el clasificador <code>modelo</code>.</td>
-</tr>
-<tr>
-<td><code>busqueda</code></td>
-<td>Objeto GridSearchCV que compara hiperparámetros mediante validación cruzada.</td>
-</tr>
-<tr>
-<td><code>puntajes_cv</code></td>
-<td>Mejor F1 macro medio de validación cruzada de cada familia.</td>
-</tr>
-<tr>
-<td><code>mejores_modelos</code> / <code>mejor_modelo</code></td>
-<td>Candidatos reajustados / Pipeline seleccionado mediante CV.</td>
-</tr>
-<tr>
-<td><code>y_pred_final</code></td>
-<td>Predicciones del modelo seleccionado sobre la prueba.</td>
-</tr>
-<tr>
-<td><code>def</code> / <code>return</code></td>
-<td>Define una función / entrega su resultado al código que la utiliza.</td>
-</tr>
-<tr>
-<td><code>for</code></td>
-<td>Repite operaciones para cada elemento de una colección.</td>
-</tr>
-<tr>
-<td><code>assert</code></td>
-<td>Detiene la ejecución cuando no se cumple una comprobación.</td>
-</tr>
-<tr>
-<td><code>fit</code></td>
-<td>Aprende usando los datos proporcionados.</td>
-</tr>
-<tr>
-<td><code>transform</code></td>
-<td>Aplica una representación ya aprendida sin volver a ajustarla.</td>
-</tr>
-<tr>
-<td><code>fit_transform</code></td>
-<td>Aprende la representación y transforma los mismos datos.</td>
-</tr>
-<tr>
-<td><code>predict</code></td>
-<td>Utiliza un modelo entrenado para obtener etiquetas.</td>
-</tr>
-<tr>
-<td><code>display</code> / <code>print</code> / <code>to_csv</code></td>
-<td>Muestra tablas o texto enriquecido / imprime mensajes / guarda tablas.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Partes-importantes-del-c%C3%B3digo-para-la-exposici%C3%B3n">Partes importantes del código para la exposición<a class="anchor-link" href="#Partes-importantes-del-c%C3%B3digo-para-la-exposici%C3%B3n">¶</a></h3><p>Los fragmentos siguientes seleccionan las líneas relevantes del notebook. Sirven para explicar el desarrollo junto con las celdas completas; deben ejecutarse dentro de su secuencia, porque utilizan variables creadas anteriormente.</p>
-<h4 id="1.-Preparaci%C3%B3n-y-carga-de-los-datos-%E2%80%94-celdas-1-a-6">1. Preparación y carga de los datos — celdas 1 a 6<a class="anchor-link" href="#1.-Preparaci%C3%B3n-y-carga-de-los-datos-%E2%80%94-celdas-1-a-6">¶</a></h4><p>La celda 1 importa bibliotecas y define <code>SEMILLA = 42</code>, <code>N_JOBS = 2</code> y <code>CLASES</code>. <code>SEMILLA</code> permite repetir las particiones con los mismos datos, orden y versiones. <code>N_JOBS</code> limita a dos los trabajos paralelos de la búsqueda. <code>CLASES</code> fija el orden negativo, neutral y positivo en los informes y matrices. <code>RAIZ</code> localiza la carpeta del proyecto mediante <code>Path</code>, y <code>SALIDA</code> identifica <code>resultados/</code>.</p>
-<p>En la celda 2 se leen los datos:</p>
-<div class="highlight"><pre><span></span><span class="n">ruta_dataset</span> <span class="o">=</span> <span class="n">RAIZ</span> <span class="o">/</span> <span class="s2">"data"</span> <span class="o">/</span> <span class="s2">"articulos_es.csv"</span>
-<span class="n">df_original</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_dataset</span><span class="p">,</span> <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-<p><code>ruta_dataset</code> identifica el CSV y <code>pd.read_csv</code> lo convierte en una tabla de pandas. <code>keep_default_na=False</code> conserva los campos vacíos como cadenas, para identificarlos y excluirlos de forma explícita. La tabla inicial contiene 388 evaluaciones en español.</p>
-<p>Antes de leer el CSV, la misma celda ejecuta <code>scripts/descargar_dataset.py</code> mediante <code>subprocess.run</code> y el Python del kernel, <code>sys.executable</code>. El script verifica el original y prepara el CSV. La celda consulta <code>source.json</code>, calcula SHA-256 y compara la huella del CSV con la registrada. Esta comprobación detecta cambios en los bytes del archivo; no evalúa la calidad de las etiquetas.</p>
-<p>Las celdas 3 a 6 comprueban el esquema, conservan las columnas necesarias y retiran textos vacíos y duplicados exactos. <code>df_original</code> conserva la tabla cargada y <code>df</code> contiene la tabla de trabajo. <code>auditoria</code> registra los conteos. Los <code>assert</code> detienen el desarrollo si una condición, como la unicidad de los identificadores, no se cumple.</p>
-<p><strong>Para exponer:</strong> “Primero verificamos la procedencia y cargamos el CSV. Cada fila representa una evaluación. Después excluimos seis comentarios vacíos y conservamos 382 para el análisis”.</p>
-<h4 id="2.-Etiquetas,-limpieza-y-variables-de-entrada-%E2%80%94-celdas-7,-9-y-10">2. Etiquetas, limpieza y variables de entrada — celdas 7, 9 y 10<a class="anchor-link" href="#2.-Etiquetas,-limpieza-y-variables-de-entrada-%E2%80%94-celdas-7,-9-y-10">¶</a></h4><p>La celda 7 define <code>etiquetar_sentimiento()</code> y la aplica a la orientación original:</p>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"sentimiento"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"orientacion"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">etiquetar_sentimiento</span><span class="p">)</span>
-</pre></div>
-<p><code>apply</code> llama a la función para cada valor de <code>orientacion</code>. La función asigna negativo a −2 y −1, neutral a 0 y positivo a 1 y 2. Estas etiquetas son las respuestas conocidas que permiten el aprendizaje supervisado. Esta asignación no es una predicción del modelo ni una búsqueda de palabras positivas o negativas.</p>
-<p>La celda 9 define la limpieza utilizada tanto para preparar el dataset como para procesar un comentario nuevo:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">limpiar_texto</span><span class="p">(</span><span class="n">texto</span><span class="p">):</span>
-    <span class="n">texto</span> <span class="o">=</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">"NFC"</span><span class="p">,</span> <span class="n">html</span><span class="o">.</span><span class="n">unescape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">texto</span><span class="p">)))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">texto</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"&lt;[^&gt;]+&gt;"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span>
-    <span class="n">texto</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"https?://\S+|www\.\S+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span>
-    <span class="n">texto</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">isspace</span><span class="p">()</span> <span class="k">else</span> <span class="s2">" "</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">texto</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</pre></div>
-<p>La primera línea decodifica entidades HTML, unifica la representación Unicode y convierte a minúsculas. Los dos <code>re.sub</code> siguientes retiran etiquetas HTML y URLs. <code>isalpha()</code> conserva letras Unicode, incluidas tildes y ñ; <code>isspace()</code> conserva espacios. Otros caracteres se sustituyen por espacios. La última línea compacta espacios repetidos y retira los de los extremos. La función no elimina palabras por considerarlas frecuentes, por lo que conserva negaciones como “no”.</p>
-<p>La función se aplica con <code>df["texto"].apply(limpiar_texto)</code> para crear <code>texto_limpio</code>. Después se revisan textos que quedaron vacíos y repeticiones normalizadas. La celda 10 separa las funciones de cada columna:</p>
-<div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"texto_limpio"</span><span class="p">]</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"sentimiento"</span><span class="p">]</span>
-<span class="n">grupos</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"articulo_id"</span><span class="p">]</span>
-</pre></div>
-<p><code>X</code> contiene la información que recibirá el clasificador. <code>y</code> contiene lo que debe aprender a predecir. <code>grupos</code> organiza las particiones por artículo; no se concatena con el texto ni se introduce como característica. El orden de las tres series debe mantenerse alineado para que cada comentario corresponda a su etiqueta y artículo.</p>
-<p><strong>Para exponer:</strong> “La orientación original proporciona la respuesta conocida. Limpiamos el comentario sin eliminar las negaciones. El modelo recibe solo texto; los artículos sirven para organizar la separación”.</p>
-<h4 id="3.-Reserva-de-prueba-por-art%C3%ADculo-%E2%80%94-celda-11">3. Reserva de prueba por artículo — celda 11<a class="anchor-link" href="#3.-Reserva-de-prueba-por-art%C3%ADculo-%E2%80%94-celda-11">¶</a></h4><div class="highlight"><pre><span></span><span class="n">separador</span> <span class="o">=</span> <span class="n">StratifiedGroupKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">)</span>
-<span class="n">indices_train</span><span class="p">,</span> <span class="n">indices_test</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">separador</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">grupos</span><span class="p">))</span>
-<span class="n">X_train_text</span><span class="p">,</span> <span class="n">X_test_text</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_train</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_test</span><span class="p">]</span>
-<span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_train</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_test</span><span class="p">]</span>
-<span class="n">grupos_train</span><span class="p">,</span> <span class="n">grupos_test</span> <span class="o">=</span> <span class="n">grupos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_train</span><span class="p">],</span> <span class="n">grupos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_test</span><span class="p">]</span>
-<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">grupos_train</span><span class="p">)</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">grupos_test</span><span class="p">)</span>
-<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">X_train_text</span><span class="p">)</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">X_test_text</span><span class="p">)</span>
-</pre></div>
-<p><code>split</code> genera índices de particiones que respetan los grupos y tratan de conservar las proporciones de las clases. <code>next</code> toma la primera división de los cinco pliegues como reserva de prueba. <code>iloc</code> selecciona las filas por posición y aplica los mismos índices a textos, etiquetas y artículos.</p>
-<p>Quedan 307 evaluaciones para entrenamiento y 75 para prueba. <code>isdisjoint</code> comprueba que no haya artículos ni textos iguales compartidos entre ambos conjuntos. La prueba permanece reservada mientras se buscan hiperparámetros; no se utiliza para decidir el vocabulario ni seleccionar el modelo.</p>
-<p><strong>Para exponer:</strong> “Separamos artículos completos. Así comprobamos el resultado sobre evaluaciones de artículos diferentes de los utilizados para entrenar”.</p>
-<h4 id="4.-Conversi%C3%B3n-del-texto-a-n%C3%BAmeros-%E2%80%94-celdas-12-a-14">4. Conversión del texto a números — celdas 12 a 14<a class="anchor-link" href="#4.-Conversi%C3%B3n-del-texto-a-n%C3%BAmeros-%E2%80%94-celdas-12-a-14">¶</a></h4><p>Los clasificadores utilizan características numéricas. La celda 12 configura el vectorizador:</p>
-<div class="highlight"><pre><span></span><span class="n">config_tfidf</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">max_features</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">min_df</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                    <span class="n">max_df</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">stop_words</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sublinear_tf</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="o">**</span><span class="n">config_tfidf</span><span class="p">)</span>
-</pre></div>
-<p><code>config_tfidf</code> reúne los parámetros y <code>**config_tfidf</code> los entrega como argumentos al constructor. Crear <code>tfidf</code> todavía no aprende un vocabulario. Las opciones representan palabras y pares de palabras, limitan el vocabulario y conservan negaciones. Los valores y su propósito están detallados en 4.2.</p>
-<p>La celda 13 muestra la diferencia entre aprender y aplicar la transformación:</p>
-<div class="highlight"><pre><span></span><span class="n">tfidf_demostracion</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">tfidf</span><span class="p">)</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">tfidf_demostracion</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train_text</span><span class="p">)</span>
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">tfidf_demostracion</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test_text</span><span class="p">)</span>
-</pre></div>
-<p><code>clone</code> crea un vectorizador independiente con la misma configuración. <code>fit_transform</code> aprende el vocabulario y los pesos IDF con el entrenamiento y obtiene su matriz. <code>transform</code> representa la prueba usando ese vocabulario, sin aprender uno nuevo. Cada fila corresponde a un comentario y cada columna a una característica textual. La celda 14 muestra las dimensiones y algunos términos del vocabulario.</p>
-<p><strong>Estas matrices son didácticas.</strong> La búsqueda de la celda 17 recibe <code>X_train_text</code>, no <code>X_train</code>. Sus Pipelines ajustan vectorizadores independientes dentro de cada pliegue. Utilizar un vocabulario aprendido con todas las filas antes de validar revelaría información de la validación.</p>
-<p><strong>Para exponer:</strong> “TF-IDF transforma palabras y pares de palabras en valores numéricos. Mostramos cómo funciona y, durante la búsqueda, lo aprendemos de nuevo dentro de cada pliegue de entrenamiento”.</p>
-<h4 id="5.-Importaci%C3%B3n-y-creaci%C3%B3n-de-los-tres-modelos-%E2%80%94-celdas-1-y-15">5. Importación y creación de los tres modelos — celdas 1 y 15<a class="anchor-link" href="#5.-Importaci%C3%B3n-y-creaci%C3%B3n-de-los-tres-modelos-%E2%80%94-celdas-1-y-15">¶</a></h4><p>La celda 1 importa las clases de scikit-learn:</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultinomialNB</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSVC</span>
-</pre></div>
-<p>Importar permite utilizar las implementaciones de los algoritmos. No descarga pesos ni restaura un modelo ya entrenado. La celda 15 crea los candidatos:</p>
-<div class="highlight"><pre><span></span><span class="n">modelos</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"Logistic Regression"</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">),</span>
-    <span class="s2">"Multinomial Naive Bayes"</span><span class="p">:</span> <span class="n">MultinomialNB</span><span class="p">(),</span>
-    <span class="s2">"Linear SVM"</span><span class="p">:</span> <span class="n">LinearSVC</span><span class="p">(</span><span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">),</span>
-<span class="p">}</span>
-</pre></div>
-<p><code>modelos</code> es un diccionario: cada clave identifica una familia y cada valor es un objeto que conserva su configuración. Regresión logística aprende pesos asociados a las características; Naive Bayes utiliza un modelo probabilístico; SVM aprende fronteras de decisión por margen. En este punto ninguno de los tres candidatos ha visto los comentarios.</p>
-<p><code>class_weight="balanced"</code> ajusta el peso de las clases durante el entrenamiento de regresión logística y SVM. <code>max_iter</code> establece un límite de iteraciones del optimizador; no representa el número de comentarios ni el número de pliegues. <code>dual="auto"</code> permite a LinearSVC elegir la formulación de optimización compatible con los datos y parámetros. Las opciones no garantizan por sí solas un mejor resultado.</p>
-<p><strong>Para exponer:</strong> “Aquí creamos tres candidatos con sus parámetros iniciales. Todavía no están entrenados; aprenderán al ejecutar <code>fit</code> en la búsqueda de la celda 17”.</p>
-<h4 id="6.-Entrenamiento,-b%C3%BAsqueda-y-selecci%C3%B3n-final-%E2%80%94-celdas-16-y-17">6. Entrenamiento, búsqueda y selección final — celdas 16 y 17<a class="anchor-link" href="#6.-Entrenamiento,-b%C3%BAsqueda-y-selecci%C3%B3n-final-%E2%80%94-celdas-16-y-17">¶</a></h4><p>La celda 16 define las configuraciones que se compararán:</p>
-<div class="highlight"><pre><span></span><span class="n">parametros</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"Logistic Regression"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"modelo__C"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
-    <span class="s2">"Multinomial Naive Bayes"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"modelo__alpha"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]},</span>
-    <span class="s2">"Linear SVM"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"modelo__C"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
-<span class="p">}</span>
-</pre></div>
-<p>Los nombres contienen dos guiones bajos: <code>modelo__C</code> significa “cambiar el parámetro <code>C</code> del paso llamado <code>modelo</code>”. <code>C</code> controla inversamente la regularización en regresión logística y SVM. <code>alpha</code> controla el suavizado en Naive Bayes. Esta celda también crea <code>cv</code>, con cinco pliegues agrupados dentro del entrenamiento, y comprueba que no compartan artículos.</p>
-<p>El siguiente fragmento de la celda 17 reúne las operaciones centrales del bucle. Se omiten los registros de tiempos y archivos CSV:</p>
-<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">modelo</span> <span class="ow">in</span> <span class="n">modelos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s2">"tfidf"</span><span class="p">,</span> <span class="n">clone</span><span class="p">(</span><span class="n">tfidf</span><span class="p">)),</span> <span class="p">(</span><span class="s2">"modelo"</span><span class="p">,</span> <span class="n">clone</span><span class="p">(</span><span class="n">modelo</span><span class="p">))])</span>
-    <span class="n">busqueda</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
-        <span class="n">pipeline</span><span class="p">,</span> <span class="n">parametros</span><span class="p">[</span><span class="n">nombre</span><span class="p">],</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">"f1_macro"</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
-        <span class="n">n_jobs</span><span class="o">=</span><span class="n">N_JOBS</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="n">N_JOBS</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="s2">"raise"</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">with</span> <span class="n">parallel_backend</span><span class="p">(</span><span class="s2">"threading"</span><span class="p">),</span> <span class="n">threadpool_limits</span><span class="p">(</span><span class="n">limits</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">busqueda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_text</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">grupos_train</span><span class="p">)</span>
-    <span class="n">mejores_modelos</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="n">busqueda</span><span class="o">.</span><span class="n">best_estimator_</span>
-    <span class="n">puntajes_cv</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">busqueda</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
-</pre></div>
-<p><code>for</code> recorre las tres familias. <code>Pipeline</code> conecta dos pasos: <code>tfidf</code> representa el texto y <code>modelo</code> aprende a clasificar esa representación. Las copias creadas con <code>clone</code> evitan reutilizar un objeto previamente ajustado. La limpieza ya se realizó antes; no forma parte de este Pipeline.</p>
-<p><strong>El entrenamiento real comienza en <code>busqueda.fit(...)</code>.</strong> <code>X_train_text</code> aporta comentarios, <code>y_train</code> aporta respuestas conocidas y <code>groups=grupos_train</code> organiza los pliegues. Para cada configuración, GridSearchCV aprende TF-IDF y ajusta el clasificador solo con la parte de entrenamiento del pliegue; calcula F1 macro sobre su validación. La parte reservada en <code>X_test_text</code> no interviene. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">Funcionamiento de Pipeline</a>.</p>
-<p><code>scoring="f1_macro"</code> establece qué métrica se busca mejorar. <code>refit=True</code> reajusta el candidato ganador de cada familia con los 307 comentarios de entrenamiento. <code>n_jobs</code> y <code>pre_dispatch</code> limitan los trabajos paralelos; el bloque <code>with</code> controla el backend y los hilos internos. <code>error_score="raise"</code> hace visible un error de ajuste en vez de sustituirlo por una puntuación. Se realizan 45 ajustes de validación —tres familias, tres valores y cinco pliegues— y tres reajustes finales.</p>
-<p><code>best_estimator_</code> devuelve el Pipeline ganador de esa familia, ya ajustado. <code>best_score_</code> devuelve su F1 macro medio de validación cruzada; no contiene el resultado de prueba. Se almacenan en <code>mejores_modelos</code> y <code>puntajes_cv</code>, respectivamente. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">Atributos y reajuste de GridSearchCV</a>.</p>
-<p>Al finalizar el bucle se escoge la familia final:</p>
-<div class="highlight"><pre><span></span><span class="n">mejor_nombre</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">puntajes_cv</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">puntajes_cv</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
-<span class="n">mejor_modelo</span> <span class="o">=</span> <span class="n">mejores_modelos</span><span class="p">[</span><span class="n">mejor_nombre</span><span class="p">]</span>
-</pre></div>
-<p><code>max</code> compara los valores de <code>puntajes_cv</code>, utilizando <code>get</code> para consultar el puntaje de cada nombre. <code>mejor_nombre</code> guarda el nombre ganador y <code>mejor_modelo</code> recupera su Pipeline entrenado. En la ejecución guardada se selecciona Linear SVM con <code>C=10</code> y F1 macro CV de 0,5133. La selección se completa antes de examinar la prueba.</p>
-<p><strong>Para exponer:</strong> “Comparamos configuraciones usando validación cruzada dentro del entrenamiento. Cada pliegue aprende su TF-IDF. Luego reajustamos el ganador de cada familia y elegimos el de mayor F1 macro de validación”.</p>
-<h4 id="7.-Predicci%C3%B3n-sobre-prueba-y-c%C3%A1lculo-de-m%C3%A9tricas-%E2%80%94-celdas-18,-19,-21-y-22">7. Predicción sobre prueba y cálculo de métricas — celdas 18, 19, 21 y 22<a class="anchor-link" href="#7.-Predicci%C3%B3n-sobre-prueba-y-c%C3%A1lculo-de-m%C3%A9tricas-%E2%80%94-celdas-18,-19,-21-y-22">¶</a></h4><p>La celda 18 recorre <code>mejores_modelos</code> y utiliza estas líneas dentro del bucle:</p>
-<div class="highlight"><pre><span></span><span class="n">predicho</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_text</span><span class="p">)</span>
-<span class="n">predicciones</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="n">predicho</span>
-<span class="n">resultados</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"Modelo"</span><span class="p">:</span> <span class="n">nombre</span><span class="p">,</span> <span class="o">**</span><span class="n">calcular_metricas</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predicho</span><span class="p">)})</span>
-</pre></div>
-<p><code>predict</code> aplica el TF-IDF ya aprendido y el clasificador ajustado a los 75 comentarios de prueba. <code>predicho</code> contiene las etiquetas estimadas. <code>predicciones</code> conserva las salidas de cada familia para examinarlas después. <code>calcular_metricas</code> compara las etiquetas conocidas <code>y_test</code> con esas predicciones. <code>**</code> incorpora el diccionario de métricas a la fila de resultados.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calcular_metricas</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"Accuracy"</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">),</span>
-        <span class="s2">"Precision_macro"</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">CLASES</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-        <span class="s2">"Recall_macro"</span><span class="p">:</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">CLASES</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-        <span class="s2">"F1_macro"</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">predicho</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">CLASES</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-    <span class="p">}</span>
-</pre></div>
-<p>Accuracy mide aciertos sobre el total. Para una clase, Precision indica qué proporción de las predicciones de esa clase son correctas; Recall indica qué proporción de sus ejemplos reales se recuperan. F1 combina ambas. <code>average="macro"</code> calcula cada métrica por clase y promedia con el mismo peso para las tres. F1 macro promedia los F1 de las clases; no se obtiene combinando Precision macro con Recall macro. <code>zero_division=0</code> asigna cero cuando un cociente queda indefinido. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html">Definición de F1 y promedio macro</a>.</p>
-<p>El <code>DummyClassifier</code> de la misma celda es una referencia que siempre elige la clase mayoritaria. Su <code>fit</code> aprende cuál es esa clase a partir de <code>y_train</code>; no vuelve a entrenar los tres modelos. La celda 19 muestra la comparación, manteniendo la selección realizada por validación cruzada.</p>
-<p>La celda 21 recupera <code>y_pred_final = predicciones[mejor_nombre]</code>. <code>classification_report</code> separa Precision, Recall, F1 y soporte por clase; soporte es la cantidad de ejemplos reales de esa clase. La celda 22 construye <code>confusion_matrix(y_test, y_pred_final, labels=CLASES)</code>. Las filas indican la clase real, las columnas la predicha y la diagonal contiene los aciertos. La matriz normalizada divide cada fila por su soporte para mostrar proporciones.</p>
-<p>Para comprobar la interpretación con la salida guardada, SVM acierta 35 de 75 comentarios: Accuracy es 46,67 %. Su F1 macro de prueba es 0,3877. Recupera solo 1 de los 21 neutrales. El informe y la matriz permiten explicar este comportamiento además de presentar una cifra global.</p>
-<p><strong>Para exponer:</strong> “Evaluamos los modelos sobre datos reservados. Accuracy muestra el acierto global; F1 macro y el informe por clase permiten observar el rendimiento de las tres clases por separado”.</p>
-<h4 id="8.-Registro-de-resultados-y-estado-del-modelo-%E2%80%94-celda-20">8. Registro de resultados y estado del modelo — celda 20<a class="anchor-link" href="#8.-Registro-de-resultados-y-estado-del-modelo-%E2%80%94-celda-20">¶</a></h4><p>La celda 20 crea <code>resumen</code> con la fuente, huellas, versiones, semilla, partición, configuración y métricas, y lo escribe en JSON:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">SALIDA</span> <span class="o">/</span> <span class="s2">"metricas.json"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">resumen</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
-</pre></div>
-<p><code>json.dumps</code> convierte el diccionario en texto. <code>indent=2</code> facilita su lectura y <code>ensure_ascii=False</code> conserva los caracteres españoles. <code>write_text</code> guarda ese texto en <code>resultados/metricas.json</code> con codificación UTF-8. Otros bloques guardan tablas con <code>to_csv</code> y figuras con <code>savefig</code>.</p>
-<p><strong>Estos archivos documentan el experimento; no almacenan el objeto <code>mejor_modelo</code>.</strong> El notebook guarda código y salidas, pero el Pipeline entrenado permanece en la memoria del kernel durante la sesión. El proyecto no utiliza <code>joblib.dump</code>, <code>joblib.load</code> ni un archivo de pesos para restaurarlo. Reiniciar o cerrar el kernel elimina las variables: hay que ejecutar de nuevo las celdas en orden para reconstruir el modelo, aunque todavía se vean las salidas guardadas.</p>
-<p><strong>Para exponer:</strong> “Guardamos evidencias para revisar el experimento. El modelo entrenado sigue en la memoria de Jupyter y se reutiliza mientras esa sesión permanezca activa”.</p>
-<h4 id="9.-Demostraci%C3%B3n-de-la-pr%C3%A1ctica-con-un-comentario-nuevo-%E2%80%94-celda-23">9. Demostración de la práctica con un comentario nuevo — celda 23<a class="anchor-link" href="#9.-Demostraci%C3%B3n-de-la-pr%C3%A1ctica-con-un-comentario-nuevo-%E2%80%94-celda-23">¶</a></h4><p>La celda 23 comprueba primero que existan <code>pd</code>, <code>limpiar_texto</code> y <code>mejor_modelo</code>. Si faltan, muestra un mensaje que indica ejecutar las celdas desde el inicio. Después define la función de predicción:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">predecir_sentimiento</span><span class="p">(</span><span class="n">texto</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">texto</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Escriba una evaluación no vacía en español."</span><span class="p">)</span>
-    <span class="n">texto_limpio</span> <span class="o">=</span> <span class="n">limpiar_texto</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span>
-    <span class="n">vector</span> <span class="o">=</span> <span class="n">mejor_modelo</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s2">"tfidf"</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">texto_limpio</span><span class="p">])</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">texto_limpio</span> <span class="ow">or</span> <span class="n">vector</span><span class="o">.</span><span class="n">nnz</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"El comentario no contiene términos conocidos por el modelo."</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">mejor_modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span><span class="n">texto_limpio</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
-</pre></div>
-<p><code>isinstance</code> comprueba que la entrada sea una cadena y <code>strip</code> permite detectar texto vacío. <code>limpiar_texto</code> aplica la misma preparación utilizada para los comentarios del dataset. <code>named_steps["tfidf"]</code> accede al vectorizador entrenado dentro del Pipeline. Su <code>transform</code> representa el comentario con el vocabulario existente. <code>vector.nnz</code> cuenta las posiciones con valor distinto de cero; si es cero, ninguna característica conocida representa esa entrada.</p>
-<p>En <code>predict([texto_limpio])</code>, los corchetes forman una colección con un solo comentario, que es el formato esperado. El Pipeline aplica de nuevo su transformación y después el clasificador, sin ajustar sus parámetros. <code>[0]</code> extrae la primera y única etiqueta; <code>str</code> la entrega como texto. La transformación anterior se utiliza para comprobar el vocabulario, mientras que <code>predict</code> realiza la clasificación completa. Este control no detecta automáticamente el idioma ni garantiza un acierto.</p>
-<p>Para la exposición, cambie únicamente el contenido de <code>mi_evaluacion</code> y ejecute esa celda con el kernel entrenado:</p>
-<div class="highlight"><pre><span></span><span class="n">mi_evaluacion</span> <span class="o">=</span> <span class="s2">"El artículo no explica la metodología y sus conclusiones no están justificadas."</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Sentimiento predicho:"</span><span class="p">,</span> <span class="n">predecir_sentimiento</span><span class="p">(</span><span class="n">mi_evaluacion</span><span class="p">))</span>
-</pre></div>
-<p>Los ejemplos escritos en la demo no forman parte del conjunto de prueba. La predicción representa el sentimiento estimado del comentario; no determina la aceptación ni la calidad científica del artículo.</p>
-<p><strong>Para exponer:</strong> “Limpiamos el comentario nuevo con la misma función, comprobamos que tenga términos conocidos y utilizamos el Pipeline seleccionado. Esta celda predice sin volver a entrenar”.</p>
-<h3 id="Abrir-la-pr%C3%A1ctica-en-Windows-o-Linux">Abrir la práctica en Windows o Linux<a class="anchor-link" href="#Abrir-la-pr%C3%A1ctica-en-Windows-o-Linux">¶</a></h3><p>El mismo notebook y los mismos scripts se utilizan en <strong>Windows y Linux</strong>. Cada compañero debe crear su propio entorno con <strong>Python 3.12</strong>; no copie la carpeta <code>.venv</code> de otro equipo o sistema operativo. Abra una terminal en la carpeta <code>sentimiento-academico</code>, donde se encuentran <code>README.md</code> y <code>requirements-lock.txt</code>.</p>
-<p><strong>Preparación en Windows (PowerShell).</strong> Con Python 3.12 instalado y disponible mediante el lanzador <code>py</code>, ejecute:</p>
-<div class="highlight"><pre><span></span><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
-<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="n">requirements-lock</span><span class="p">.</span><span class="n">txt</span>
-<span class="p">.\</span><span class="n">abrir_notebook</span><span class="p">.</span><span class="n">bat</span>
-</pre></div>
-<p>Después de preparar el entorno una vez, puede abrir <code>abrir_notebook.bat</code> con doble clic. Si <code>py -3.12</code> no encuentra Python, utilice la ruta al ejecutable de Python 3.12; por ejemplo, <code>&amp; "C:\ruta\a\python.exe" -m venv .venv</code> en PowerShell.</p>
-<p><strong>Preparación en Linux (terminal).</strong> Compruebe que está instalado Python 3.12 con soporte para crear entornos virtuales y ejecute:</p>
-<div class="highlight"><pre><span></span>python3.12<span class="w"> </span>--version
-python3.12<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-.venv/bin/python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-lock.txt
-sh<span class="w"> </span>abrir_notebook.sh
-</pre></div>
-<p>Si su comando <code>python3</code> corresponde a Python 3.12, puede utilizar <code>python3 -m venv .venv</code>. Si falta Python 3.12 o su módulo <code>venv</code>, instálelos con el gestor de paquetes de su distribución antes de continuar. En Ubuntu o Debian, el nombre y la disponibilidad del paquete dependen de la versión del sistema y de cómo se instaló Python; compruebe que el soporte <code>venv</code> corresponda al Python 3.12 utilizado.</p>
-<p>Después de preparar el entorno una vez, utilice <code>sh abrir_notebook.sh</code> para abrir la práctica. No necesita activar <code>.venv</code> ni cambiar los permisos del archivo: el lanzador utiliza directamente el Python del entorno del proyecto. Los lanzadores comprueban que el entorno exista; la instalación de dependencias se realiza con los comandos anteriores.</p>
-<p><code>requirements-lock.txt</code> fija las versiones e incluye marcadores del sistema operativo: instala <code>pywinpty</code> en Windows y <code>pexpect</code> y <code>ptyprocess</code> en Linux. Las dependencias compartidas, como <code>tzdata</code>, se instalan en ambos sistemas. <code>.gitattributes</code> mantiene los bytes de <code>data/reviews.json</code>, <code>data/articulos_es.csv</code> y <code>data/source.json</code> al compartirlos mediante Git, para conservar los datos y sus verificaciones de integridad; también mantiene finales de línea LF en el lanzador de Linux. No cambie los archivos originales ni las huellas SHA-256 para corregir un error de verificación.</p>
-<p>Si prefiere abrir JupyterLab sin el lanzador, utilice el comando de su sistema desde la carpeta del proyecto:</p>
-<table>
-<thead>
-<tr>
-<th>Sistema</th>
-<th>Comando</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Windows / PowerShell</td>
-<td><code>.\.venv\Scripts\python.exe -m jupyterlab notebooks/sentiment_analysis.ipynb</code></td>
-</tr>
-<tr>
-<td>Linux</td>
-<td><code>.venv/bin/python -m jupyterlab notebooks/sentiment_analysis.ipynb</code></td>
-</tr>
-</tbody>
-</table>
+<h3 id="4.5-Explicaci%C3%B3n-del-c%C3%B3digo">4.5 Explicación del código<a class="anchor-link" href="#4.5-Explicaci%C3%B3n-del-c%C3%B3digo">¶</a></h3>
 </div>
 </div>
 </div>
@@ -10390,20 +9651,7 @@ sh<span class="w"> </span>abrir_notebook.sh
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Celda-23.-Demostraci%C3%B3n-de-la-pr%C3%A1ctica">Celda 23. Demostración de la práctica<a class="anchor-link" href="#Celda-23.-Demostraci%C3%B3n-de-la-pr%C3%A1ctica">¶</a></h3><p><strong>Objetivo:</strong> utilizar el clasificador entrenado con un comentario académico nuevo en español.</p>
-<p>Primero, <code>requeridas</code> enumera <code>pd</code>, <code>limpiar_texto</code> y <code>mejor_modelo</code>. <code>globals()</code> consulta las variables disponibles en el kernel. Si falta alguna, el código lanza un <code>RuntimeError</code> con la instrucción de ejecutar todas las celdas desde el inicio. Un kernel reiniciado pierde las variables y el modelo que estaban en memoria.</p>
-<p>La función <code>predecir_sentimiento(texto)</code> trabaja así:</p>
-<ol>
-<li><code>isinstance(texto, str)</code> exige texto y <code>.strip()</code> comprueba que no esté vacío. Si falla, devuelve un error claro mediante <code>ValueError</code>.</li>
-<li><code>limpiar_texto(texto)</code> aplica la misma limpieza que se utilizó con los datos de entrenamiento.</li>
-<li><code>mejor_modelo.named_steps["tfidf"]</code> accede al vectorizador entrenado. <code>.transform([texto_limpio])</code> representa el comentario sin aprender vocabulario nuevo. Los corchetes crean una lista con un único comentario.</li>
-<li><code>vector.nnz</code> cuenta sus valores distintos de cero. Si el texto quedó vacío o no contiene términos conocidos, se rechaza la entrada. Este control no detecta automáticamente el idioma ni garantiza una predicción fiable.</li>
-<li><code>mejor_modelo.predict([texto_limpio])[0]</code> transforma y clasifica mediante el <code>Pipeline</code> ya ajustado. <code>[0]</code> recupera la única predicción y <code>str(...)</code> la devuelve como etiqueta.</li>
-</ol>
-<p>La lista <code>ejemplos</code> contiene tres frases redactadas para demostrar la función. La comprensión <code>[predecir_sentimiento(t) for t in ejemplos]</code> clasifica cada una y el DataFrame muestra sus salidas. No son el conjunto de prueba ni tienen etiquetas de evaluación asignadas en esta celda.</p>
-<p><strong>Para probar:</strong> cambie únicamente el texto entre comillas de <code>mi_evaluacion</code>, debajo de <code>CAMBIA ÚNICAMENTE EL TEXTO ENTRE COMILLAS</code>. Pulse <strong>Shift + Enter</strong> con esta celda seleccionada, después de ejecutar el notebook completo. Los <code>print</code> muestran su texto y el sentimiento predicho. No se vuelve a entrenar y no se muestra una probabilidad de confianza.</p>
-<p><strong>Interpretación:</strong> la etiqueta describe una predicción del tono del comentario. Puede equivocarse. Una predicción positiva no equivale a recomendar la aceptación del artículo.</p>
-<p><strong>Para exponer:</strong> “Limpiamos el comentario nuevo con la misma función, comprobamos que tenga términos conocidos y utilizamos el Pipeline seleccionado. Esta celda predice sin volver a entrenar”.</p>
+<h4 id="Celda-23.-Demostraci%C3%B3n-de-la-pr%C3%A1ctica">Celda 23. Demostración de la práctica<a class="anchor-link" href="#Celda-23.-Demostraci%C3%B3n-de-la-pr%C3%A1ctica">¶</a></h4>
 </div>
 </div>
 </div>
@@ -10502,26 +9750,6 @@ sh<span class="w"> </span>abrir_notebook.sh
 Sentimiento predicho: negativo
 </pre>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b634a54a">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Interpretaci%C3%B3n-y-l%C3%ADmites">Interpretación y límites<a class="anchor-link" href="#Interpretaci%C3%B3n-y-l%C3%ADmites">¶</a></h3><p>El corpus es pequeño y contiene comentarios de 2010, 2013, 2014 y 2015. Las métricas describen esta partición y este dominio. No se realizó evaluación temporal ni por revisor, y no se garantiza el rendimiento en artículos actuales o de otras disciplinas. La agrupación mantiene separados los artículos; no detecta todas las paráfrasis entre artículos.</p>
-<p>orientation refleja el sentimiento percibido por los anotadores. No equivale a evaluation ni a una decisión editorial. Agrupar cinco niveles en tres pierde intensidad. La limpieza pierde puntuación y cifras; TF-IDF no interpreta ironía ni contexto profundo. La demo ilustra predicciones, no valida por sí misma la calidad del modelo. No se calcularon intervalos de confianza ni pruebas de significación.</p>
-<h3 id="Fuentes-t%C3%A9cnicas">Fuentes técnicas<a class="anchor-link" href="#Fuentes-t%C3%A9cnicas">¶</a></h3><ul>
-<li><a href="https://archive.ics.uci.edu/dataset/410/paper+reviews">Paper Reviews: esquema, procedencia y licencia CC BY 4.0</a>.</li>
-<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedGroupKFold.html">StratifiedGroupKFold: particiones con grupos separados</a>.</li>
-<li><a href="https://scikit-learn.org/stable/common_pitfalls.html#data-leakage">Pipeline y prevención de fuga de información</a>.</li>
-<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html">TfidfVectorizer</a>.</li>
-<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">GridSearchCV</a>.</li>
-<li><a href="https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics">Métricas de clasificación: Precision, Recall, F1 y promedios</a>.</li>
-</ul>
 </div>
 </div>
 </div>
